@@ -1,0 +1,17 @@
+{
+  "name": "GeoConfinement",
+  "displayName": "GeoConfinement",
+  "expo": {
+    "name": "GeoConfinement",
+    "slug": "GeoConfinement",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
