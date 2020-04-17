@@ -3,7 +3,7 @@ import { SET_PARAMS } from "../actions/action-types";
 // initialise le store
 const initializeState = {
   searchLocalization: {
-    name: "Paris",
+    name: "Default",
     coord: {
       lat: 48.859268,
       lon: 2.34706,

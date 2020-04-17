@@ -12,6 +12,7 @@ import {
 
 import { connect } from "react-redux";
 
+// Coordonnées par défaut du centre de Paris
 const DEFAULT_COORD = {
   lat: 48.859268,
   lon: 2.34706,
@@ -20,6 +21,14 @@ const DEFAULT_COORD = {
 class SearchScreen extends Component {
   state = { search: "" };
 
+  // Init le state avec une adresse si et seulement si elle existe dans le reducer
+  componentDidMount = () => {
+    if (this.props.storeSearch.name !== "Default") {
+      this.setState({ search: this.props.storeSearch.name });
+    }
+  };
+
+  // Mets à jour le texte dans la search bar
   updateSearch = (search) => {
     this.setState({ search });
   };
@@ -42,10 +51,30 @@ class SearchScreen extends Component {
 
         // Puis les envoies au reducer pour mise à jour
         this.props.setCoordLocalization(searchLocalization);
-
-        //console.log(lat, lon);
       })
       .catch((error) => console.warn(error));
+  };
+
+  // Permet de créer un cercle sur la carte si une adresse a été entré
+  renderCircle = () => {
+    if (this.props.storeSearch.name !== "Default") {
+      return (
+        <Circle
+          center={{
+            latitude: this.props.storeSearch
+              ? this.props.storeSearch.coord.lat
+              : DEFAULT_COORD.lat,
+            longitude: this.props.storeSearch
+              ? this.props.storeSearch.coord.lon
+              : DEFAULT_COORD.lon,
+          }}
+          radius={1000}
+          strokeWidth={1}
+          strokeColor={"#1a66ff"}
+          fillColor={"rgba(230,238,255,0.5)"}
+        />
+      );
+    }
   };
 
   render() {
@@ -66,33 +95,26 @@ class SearchScreen extends Component {
           scrollEnabled={false}
           liteMode={true}
         >
-          <Circle
-            center={{
-              latitude: this.props.storeSearch
-                ? this.props.storeSearch.coord.lat
-                : DEFAULT_COORD.lat,
-              longitude: this.props.storeSearch
-                ? this.props.storeSearch.coord.lon
-                : DEFAULT_COORD.lon,
-            }}
-            radius={1000}
-            strokeWidth={1}
-            strokeColor={"#1a66ff"}
-            fillColor={"rgba(230,238,255,0.5)"}
-          />
+          {this.renderCircle()}
         </MapView>
 
         <SearchBar
           lightTheme
+          round
           onChangeText={this.updateSearch}
           value={this.state.search}
           onSubmitEditing={this.submitSearch}
           placeholder="Entrez votre adresse..."
+          placeholderTextColor={"black"}
+          inputStyle={{ color: "black" }}
           containerStyle={{
             position: "absolute",
             top: hp("5%"),
             left: wp("5%"),
             width: wp("90%"),
+          }}
+          style={{
+            color: "black",
           }}
         />
       </View>
