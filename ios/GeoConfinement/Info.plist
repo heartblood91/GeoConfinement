@@ -78,5 +78,13 @@
 	<string>Give GeoConfinement periences permission to access your photos</string>
 	<key>NSRemindersUsageDescription</key>
 	<string>Allow GeoConfinement to access your reminders</string>
+
+
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>Allow $(PRODUCT_NAME) to use your location</string>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>Allow $(PRODUCT_NAME) to use your location</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>Allow $(PRODUCT_NAME) to use your location</string>
 </dict>
 </plist>

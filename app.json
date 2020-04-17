@@ -5,13 +5,11 @@
     "name": "GeoConfinement",
     "slug": "GeoConfinement",
     "version": "1.0.0",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
-    "assetBundlePatterns": [
-      "**/*"
-    ]
+    "platforms": ["ios", "android", "web"],
+    "assetBundlePatterns": ["**/*"],
+    "android": {
+      "package": "com.hidemyhome.geoconfinement",
+      "versionCode": 1
+    }
   }
 }

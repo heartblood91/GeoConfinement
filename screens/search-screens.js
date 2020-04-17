@@ -97,13 +97,14 @@ class SearchScreen extends Component {
       <View style={styles.container}>
         <MapView
           style={{ flex: 1 }}
+          showsUserLocation
+          userLocationAnnotationTitle={"Moi"}
+          followsUserLocation={true}
           region={{
             ...coord,
             latitudeDelta: 0.025,
             longitudeDelta: 0.025,
           }}
-          scrollEnabled={false}
-          liteMode={true}
         >
           {this.renderCircle(coord)}
         </MapView>
@@ -119,7 +120,7 @@ class SearchScreen extends Component {
           inputStyle={{ color: "black" }}
           containerStyle={{
             position: "absolute",
-            top: hp("5%"),
+            top: hp("7%"),
             left: wp("5%"),
             width: wp("90%"),
           }}
