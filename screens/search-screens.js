@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import MapView from "react-native-maps";
+import MapView, { Circle } from "react-native-maps";
 import { StyleSheet, View } from "react-native";
 import LocationIQ from "react-native-locationiq";
 import { setCoordLocalization } from "../actions";
@@ -65,7 +65,22 @@ class SearchScreen extends Component {
           }}
           scrollEnabled={false}
           liteMode={true}
-        />
+        >
+          <Circle
+            center={{
+              latitude: this.props.storeSearch
+                ? this.props.storeSearch.coord.lat
+                : DEFAULT_COORD.lat,
+              longitude: this.props.storeSearch
+                ? this.props.storeSearch.coord.lon
+                : DEFAULT_COORD.lon,
+            }}
+            radius={1000}
+            strokeWidth={1}
+            strokeColor={"#1a66ff"}
+            fillColor={"rgba(230,238,255,0.5)"}
+          />
+        </MapView>
 
         <SearchBar
           lightTheme
