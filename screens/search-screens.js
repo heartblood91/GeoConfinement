@@ -8,12 +8,14 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
+import { connect } from "react-redux";
+
 const DEFAULT_COORD = {
   lat: 48.859268,
   lng: 2.34706,
 };
 
-export default class SearchScreen extends Component {
+class SearchScreen extends Component {
   state = { search: "" };
 
   updateSearch = (search) => {
@@ -61,3 +63,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+const mapStateToProps = (store) => {
+  return {
+    currentParams: store.params.data,
+  };
+};
+
+export default connect(mapStateToProps, undefined)(SearchScreen);
