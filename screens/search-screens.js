@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import MapView, { Circle } from "react-native-maps";
+import React, { Component, Fragment } from "react";
+import MapView, { Circle, Marker } from "react-native-maps";
 import { StyleSheet, View } from "react-native";
 import LocationIQ from "react-native-locationiq";
 import { setCoordLocalization } from "../actions";
@@ -56,46 +56,56 @@ class SearchScreen extends Component {
   };
 
   // Permet de créer un cercle sur la carte si une adresse a été entré
-  renderCircle = () => {
+  // +
+  // Ajoute un marker positionné aux coordonées de cette adresse
+  renderCircle = (coord) => {
     if (this.props.storeSearch.name !== "Default") {
       return (
-        <Circle
-          center={{
-            latitude: this.props.storeSearch
-              ? this.props.storeSearch.coord.lat
-              : DEFAULT_COORD.lat,
-            longitude: this.props.storeSearch
-              ? this.props.storeSearch.coord.lon
-              : DEFAULT_COORD.lon,
-          }}
-          radius={1000}
-          strokeWidth={1}
-          strokeColor={"#1a66ff"}
-          fillColor={"rgba(230,238,255,0.5)"}
-        />
+        <Fragment>
+          <Circle
+            center={{
+              ...coord,
+            }}
+            radius={1000}
+            strokeWidth={1}
+            strokeColor={"#1a66ff"}
+            fillColor={"rgba(230,238,255,0.5)"}
+          />
+          <Marker
+            title="Maison"
+            coordinate={{
+              ...coord,
+            }}
+            description={this.props.storeSearch.name}
+          />
+        </Fragment>
       );
     }
   };
 
   render() {
+    // Mets dans une constante les coordonnées pour éviter des répétitions
+    const coord = {
+      latitude: this.props.storeSearch
+        ? this.props.storeSearch.coord.lat
+        : DEFAULT_COORD.lat,
+      longitude: this.props.storeSearch
+        ? this.props.storeSearch.coord.lon
+        : DEFAULT_COORD.lon,
+    };
     return (
       <View style={styles.container}>
         <MapView
           style={{ flex: 1 }}
           region={{
-            latitude: this.props.storeSearch
-              ? this.props.storeSearch.coord.lat
-              : DEFAULT_COORD.lat,
-            longitude: this.props.storeSearch
-              ? this.props.storeSearch.coord.lon
-              : DEFAULT_COORD.lon,
+            ...coord,
             latitudeDelta: 0.025,
             longitudeDelta: 0.025,
           }}
           scrollEnabled={false}
           liteMode={true}
         >
-          {this.renderCircle()}
+          {this.renderCircle(coord)}
         </MapView>
 
         <SearchBar
