@@ -1,5 +1,7 @@
-import SET_PARAMS from "../actions/action-types";
+import { SET_PARAMS } from "./action-types";
 
-handleChangeParams = () => {
-  dispatch({ type: SET_PARAMS, payload: "qwerty" });
+export const setCoordLocalization = (searchLocalization) => {
+  return function (dispatch) {
+    dispatch({ type: SET_PARAMS, payload: searchLocalization });
+  };
 };
