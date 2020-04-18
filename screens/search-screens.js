@@ -19,11 +19,14 @@ const DEFAULT_COORD = {
 };
 
 class SearchScreen extends Component {
-  state = { search: "" };
+  state = { search: "", firstChange: false };
 
   // Init le state avec une adresse si et seulement si elle existe dans le reducer
   componentDidMount = () => {
-    if (this.props.storeSearch.name !== "Default") {
+    if (
+      this.props.storeSearch.name !== "Default" &&
+      this.props.storeSearch.name !== "Géolocalisation"
+    ) {
       this.setState({ search: this.props.storeSearch.name });
     }
   };
@@ -83,6 +86,23 @@ class SearchScreen extends Component {
     }
   };
 
+  firstChangeRegionWithUserCoordinate = (userCoordinate) => {
+    // Récupère les coordonnées
+    const userLocalization = {
+      name: "Géolocalisation",
+      coord: {
+        lat: userCoordinate.nativeEvent.coordinate.latitude,
+        lon: userCoordinate.nativeEvent.coordinate.longitude,
+      },
+    };
+
+    // Puis les envoies au reducer pour mise à jour de la région
+    this.props.setCoordLocalization(userLocalization);
+
+    // On set le state pour avertir que nous avons récupéré les données de la 1ère géolocalisation de l'utilisateur
+    this.setState({ firstChange: true });
+  };
+
   render() {
     // Mets dans une constante les coordonnées pour éviter des répétitions
     const coord = {
@@ -99,11 +119,18 @@ class SearchScreen extends Component {
           style={{ flex: 1 }}
           showsUserLocation
           userLocationAnnotationTitle={"Moi"}
+          userLocationUpdateInterval={30000}
           followsUserLocation={true}
+          // Récupère les coordonnées de l'utilisateur 1 seule fois pour centrer la carte sur son emplacement
+          {...(this.state.firstChange === false
+            ? {
+                onUserLocationChange: this.firstChangeRegionWithUserCoordinate,
+              }
+            : {})}
           region={{
             ...coord,
-            latitudeDelta: 0.025,
-            longitudeDelta: 0.025,
+            latitudeDelta: 0.037370910726444606,
+            longitudeDelta: 0.029233060777187347,
           }}
         >
           {this.renderCircle(coord)}
