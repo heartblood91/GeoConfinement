@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import MapView, { Circle, Marker } from "react-native-maps";
+import { Icon } from "react-native-elements";
 import { StyleSheet, View } from "react-native";
 import LocationIQ from "react-native-locationiq";
 import { setCoordLocalization } from "../actions";
@@ -18,7 +19,9 @@ const DEFAULT_COORD = {
   lon: 2.34706,
 };
 
-class SearchScreen extends Component {
+//const navigation = useNavigation();
+
+class MapScreen extends Component {
   state = { search: "", firstChange: false };
 
   // Init le state avec une adresse si et seulement si elle existe dans le reducer
@@ -135,6 +138,20 @@ class SearchScreen extends Component {
         >
           {this.renderCircle(coord)}
         </MapView>
+        <Icon
+          name="settings"
+          type="SimpleLineIcons"
+          color="#6c757d"
+          reverseColor="#fff"
+          reverse
+          size={20}
+          containerStyle={{
+            position: "absolute",
+            top: hp("5%"),
+            left: wp("85%"),
+          }}
+          onPress={() => this.props.navigation.navigate("Settings")}
+        />
 
         <SearchBar
           lightTheme
@@ -147,9 +164,9 @@ class SearchScreen extends Component {
           inputStyle={{ color: "black" }}
           containerStyle={{
             position: "absolute",
-            top: hp("7%"),
+            top: hp("5%"),
             left: wp("5%"),
-            width: wp("90%"),
+            width: wp("80%"),
           }}
           style={{
             color: "black",
@@ -176,4 +193,5 @@ const mapDispatchToProps = {
   setCoordLocalization,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchScreen);
+//
+export default connect(mapStateToProps, mapDispatchToProps)(MapScreen);
