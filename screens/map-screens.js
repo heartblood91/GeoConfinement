@@ -144,10 +144,10 @@ class MapScreen extends Component {
           color="#6c757d"
           reverseColor="#fff"
           reverse
-          size={20}
+          size={Math.round(wp("5%"))}
           containerStyle={{
             position: "absolute",
-            top: hp("5%"),
+            top: hp("1%"),
             left: wp("85%"),
           }}
           onPress={() => this.props.navigation.navigate("Settings")}
@@ -164,8 +164,8 @@ class MapScreen extends Component {
           inputStyle={{ color: "black" }}
           containerStyle={{
             position: "absolute",
-            top: hp("5%"),
-            left: wp("5%"),
+            top: hp("1%"),
+            left: wp("3%"),
             width: wp("80%"),
           }}
           style={{
