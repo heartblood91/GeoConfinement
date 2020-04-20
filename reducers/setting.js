@@ -1,4 +1,4 @@
-import { SET_PARAMS } from "../actions/action-types";
+import { SET_SETTING, SET_LOCALISATION } from "../actions/action-types";
 
 // initialise le store
 const initializeState = {
@@ -9,14 +9,26 @@ const initializeState = {
       lon: 2.34706,
     },
   },
+  geolocalisation: false,
+  notification: false,
+  visualWarning: false,
+  timer: false,
+  nightMode: false,
+  address: "",
 };
 
 export default function (state = initializeState, action) {
   switch (action.type) {
-    case SET_PARAMS:
+    case SET_LOCALISATION:
       return {
         ...state,
         searchLocalization: action.payload,
+      };
+
+    case SET_SETTING:
+      return {
+        ...state,
+        ...action.payload,
       };
 
     default:

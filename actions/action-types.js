@@ -1,1 +1,2 @@
-export const SET_PARAMS = "SET_PARAMS";
+export const SET_LOCALISATION = "SET_LOCALISATION";
+export const SET_SETTING = "SET_SETTING";

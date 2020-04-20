@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
-import ParamsReducer from "./params";
+import SettingsReducer from "./setting";
 
 const rootReducer = combineReducers({
-  params: ParamsReducer,
+  setting: SettingsReducer,
 });
 
 export default rootReducer;

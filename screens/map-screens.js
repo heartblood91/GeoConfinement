@@ -4,14 +4,14 @@ import { Icon } from "react-native-elements";
 import { StyleSheet, View } from "react-native";
 import LocationIQ from "react-native-locationiq";
 import { setCoordLocalization } from "../actions";
-
 import { SearchBar } from "react-native-elements";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-
 import { connect } from "react-redux";
+
+import { APP_COLORS } from "../styles/color";
 
 // Coordonnées par défaut du centre de Paris
 const DEFAULT_COORD = {
@@ -74,7 +74,7 @@ class MapScreen extends Component {
             }}
             radius={1000}
             strokeWidth={1}
-            strokeColor={"#1a66ff"}
+            strokeColor={APP_COLORS.blueLightcolor}
             fillColor={"rgba(230,238,255,0.5)"}
           />
           <Marker
@@ -141,7 +141,7 @@ class MapScreen extends Component {
         <Icon
           name="settings"
           type="SimpleLineIcons"
-          color="#6c757d"
+          color={APP_COLORS.grayColor}
           reverseColor="#fff"
           reverse
           size={Math.round(wp("5%"))}
@@ -160,8 +160,8 @@ class MapScreen extends Component {
           value={this.state.search}
           onSubmitEditing={this.submitSearch}
           placeholder="Entrez votre adresse..."
-          placeholderTextColor={"black"}
-          inputStyle={{ color: "black" }}
+          placeholderTextColor={APP_COLORS.blackColor}
+          inputStyle={{ color: APP_COLORS.blackColor }}
           containerStyle={{
             position: "absolute",
             top: hp("1%"),
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (store) => {
   return {
-    storeSearch: store.params.searchLocalization,
+    storeSearch: store.setting.searchLocalization,
   };
 };
 
