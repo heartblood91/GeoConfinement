@@ -5,5 +5,14 @@ export const APP_COLORS = {
   graySwitch: "#c2c2d6",
   blackColor: "#343a40",
   blueColor: "#007bff",
-  blueLightcolor: "#17a2b8",
+
+  // LightColor
+  blueLightcolor: "rgba(0, 123, 255, 0.5)",
+  redLightcolor: "rgba(220, 53, 69, 0.6)",
+  greenLightcolor: "rgba(40, 167, 69, 0.6)",
+
+  // Circle
+  blueCircle: "rgba(204,238,255,0.3)",
+  redCircle: "rgba(255,230,230,0.4)",
+  greenCircle: "rgba(204,255,220,0.3)",
 };

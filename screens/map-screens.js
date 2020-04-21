@@ -10,6 +10,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { connect } from "react-redux";
+import { getDistance } from "geolib";
 
 import { APP_COLORS } from "../styles/color";
 
@@ -22,7 +23,7 @@ const DEFAULT_COORD = {
 //const navigation = useNavigation();
 
 class MapScreen extends Component {
-  state = { search: "", firstChange: false };
+  state = { search: "", firstChange: true, distance: 0 };
 
   componentDidMount = () => {
     // Init le state avec une adresse si et seulement si elle existe dans le reducer
@@ -42,7 +43,7 @@ class MapScreen extends Component {
       this.props.storeSettings.geolocalisation !==
       prevPros.storeSettings.geolocalisation
     ) {
-      this.setState({ firstChange: !this.props.storeSettings.geolocalisation });
+      this.setState({ firstChange: this.props.storeSettings.geolocalisation });
     }
   };
 
@@ -84,10 +85,12 @@ class MapScreen extends Component {
             center={{
               ...coord,
             }}
-            radius={1000}
+            radius={this.props.storeSettings.radius}
             strokeWidth={1}
-            strokeColor={APP_COLORS.blueLightcolor}
-            fillColor={"rgba(230,238,255,0.5)"}
+            strokeColor={this.colorCircle("strokeColor")}
+            fillColor={this.colorCircle("fillColor")}
+            //strokeColor={APP_COLORS.blueLightcolor}
+            //fillColor={APP_COLORS.blueCircle}
           />
           <Marker
             title="Maison"
@@ -101,21 +104,91 @@ class MapScreen extends Component {
     }
   };
 
-  firstChangeRegionWithUserCoordinate = (userCoordinate) => {
-    // Récupère les coordonnées
-    const userLocalization = {
-      name: "Géolocalisation",
-      coord: {
-        lat: userCoordinate.nativeEvent.coordinate.latitude,
-        lon: userCoordinate.nativeEvent.coordinate.longitude,
-      },
-    };
+  colorCircle = (option) => {
+    let color;
 
-    // Puis les envoies au reducer pour mise à jour de la région
-    this.props.setCoordLocalization(userLocalization);
+    // Colorie la zone en fonction du paramètre choisie par l'utilisateur (soit bleu par défaut soit vert / rouge selon la distance)
+    if (this.props.storeSettings.visualWarning) {
+      color = this.state.distance < 1000 ? "green" : "red";
+    } else {
+      color = "blue";
+    }
 
-    // On set le state pour avertir que nous avons récupéré les données de la 1ère géolocalisation de l'utilisateur
-    this.setState({ firstChange: true });
+    // En fonction de l'option (strokeColor VS fillColor) on adapte le type de couleur
+    if (option === "strokeColor") {
+      switch (color) {
+        case "blue":
+          return APP_COLORS.blueLightcolor;
+
+        case "green":
+          return APP_COLORS.greenLightcolor;
+
+        case "red":
+          return APP_COLORS.redLightcolor;
+      }
+    } else if (option === "fillColor") {
+      switch (color) {
+        case "blue":
+          return APP_COLORS.blueCircle;
+
+        case "green":
+          return APP_COLORS.greenCircle;
+
+        case "red":
+          return APP_COLORS.redCircle;
+      }
+    }
+  };
+
+  userLocationChange = (userCoordinate, coord) => {
+    // S'il s'agit de la première initialisation on récupère les coordonées + calcule la distance si besoin + envoie les données au reducer pour MAJ de la région
+    // + on set le state pour prévenir que la première initialisation est terminée
+
+    if (this.state.firstChange) {
+      // Récupère les coordonnées
+      const userLocalization = {
+        name: "Géolocalisation",
+        coord: {
+          lat: userCoordinate.nativeEvent.coordinate.latitude,
+          lon: userCoordinate.nativeEvent.coordinate.longitude,
+        },
+      };
+
+      // On lance un calcul de distance si les coord transmises sont différentes des coordonnées par défaut
+      if (
+        coord.latitude !== DEFAULT_COORD.lat &&
+        coord.longitude !== DEFAULT_COORD.lon
+      ) {
+        this.calculDistance(userCoordinate, coord);
+      }
+
+      // Puis les envoies au reducer pour mise à jour de la région
+      this.props.setCoordLocalization(userLocalization);
+
+      // On set le state pour avertir que nous avons récupéré les données de la 1ère géolocalisation de l'utilisateur
+      this.setState({ firstChange: false });
+    } else {
+      this.calculDistance(userCoordinate, coord);
+    }
+  };
+
+  calculDistance = (userCoordinate, coord) => {
+    const distance = Math.abs(
+      getDistance(
+        {
+          latitude: userCoordinate.nativeEvent.coordinate.latitude,
+          longitude: userCoordinate.nativeEvent.coordinate.longitude,
+        },
+        { latitude: coord.latitude, longitude: coord.longitude }
+      )
+    );
+    // si la distance a évolué de ~5m alors on set le state
+    //(- de 5 cela signifie que la personne ne bouge pas)
+    const diffDistance = Math.abs(this.state.distance - distance);
+
+    if (diffDistance >= 5) {
+      this.setState({ distance });
+    }
   };
 
   render() {
@@ -137,11 +210,9 @@ class MapScreen extends Component {
           userLocationUpdateInterval={30000}
           followsUserLocation={this.props.storeSettings.geolocalisation}
           // Récupère les coordonnées de l'utilisateur 1 seule fois pour centrer la carte sur son emplacement
-          {...(this.state.firstChange === false
-            ? {
-                onUserLocationChange: this.firstChangeRegionWithUserCoordinate,
-              }
-            : {})}
+          onUserLocationChange={(userCoordinate) =>
+            this.userLocationChange(userCoordinate, coord)
+          }
           region={{
             ...coord,
             latitudeDelta:

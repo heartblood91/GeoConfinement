@@ -44,7 +44,7 @@ class SettingScreen extends Component {
             valueSwitch={this.props.storeSettings.notification}
           />
           <SettingSwitch
-            textSwitch={"Zone en couleur"}
+            textSwitch={"Couleur zone dynamique"}
             nameSwitch={"visualWarning"}
             valueSwitch={this.props.storeSettings.visualWarning}
           />

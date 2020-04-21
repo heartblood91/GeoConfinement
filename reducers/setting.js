@@ -15,6 +15,7 @@ const initializeState = {
   timer: false,
   nightMode: false,
   address: "",
+  radius: 1000,
 };
 
 export default function (state = initializeState, action) {
