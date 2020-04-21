@@ -24,13 +24,25 @@ const DEFAULT_COORD = {
 class MapScreen extends Component {
   state = { search: "", firstChange: false };
 
-  // Init le state avec une adresse si et seulement si elle existe dans le reducer
   componentDidMount = () => {
+    // Init le state avec une adresse si et seulement si elle existe dans le reducer
     if (
-      this.props.storeSearch.name !== "Default" &&
-      this.props.storeSearch.name !== "Géolocalisation"
+      this.props.storeSettings.searchLocalization.name !== "Default" &&
+      this.props.storeSettings.searchLocalization.name !== "Géolocalisation"
     ) {
-      this.setState({ search: this.props.storeSearch.name });
+      this.setState({
+        search: this.props.storeSettings.searchLocalization.name,
+      });
+    }
+  };
+
+  componentDidUpdate = (prevPros) => {
+    //Change firstChange en fonction du paramètre "Géolocalisation"
+    if (
+      this.props.storeSettings.geolocalisation !==
+      prevPros.storeSettings.geolocalisation
+    ) {
+      this.setState({ firstChange: !this.props.storeSettings.geolocalisation });
     }
   };
 
@@ -65,7 +77,7 @@ class MapScreen extends Component {
   // +
   // Ajoute un marker positionné aux coordonées de cette adresse
   renderCircle = (coord) => {
-    if (this.props.storeSearch.name !== "Default") {
+    if (this.props.storeSettings.searchLocalization.name !== "Default") {
       return (
         <Fragment>
           <Circle
@@ -82,7 +94,7 @@ class MapScreen extends Component {
             coordinate={{
               ...coord,
             }}
-            description={this.props.storeSearch.name}
+            description={this.props.storeSettings.searchLocalization.name}
           />
         </Fragment>
       );
@@ -109,21 +121,21 @@ class MapScreen extends Component {
   render() {
     // Mets dans une constante les coordonnées pour éviter des répétitions
     const coord = {
-      latitude: this.props.storeSearch
-        ? this.props.storeSearch.coord.lat
+      latitude: this.props.storeSettings.searchLocalization
+        ? this.props.storeSettings.searchLocalization.coord.lat
         : DEFAULT_COORD.lat,
-      longitude: this.props.storeSearch
-        ? this.props.storeSearch.coord.lon
+      longitude: this.props.storeSettings.searchLocalization
+        ? this.props.storeSettings.searchLocalization.coord.lon
         : DEFAULT_COORD.lon,
     };
     return (
       <View style={styles.container}>
         <MapView
           style={{ flex: 1 }}
-          showsUserLocation
+          showsUserLocation={this.props.storeSettings.geolocalisation}
           userLocationAnnotationTitle={"Moi"}
           userLocationUpdateInterval={30000}
-          followsUserLocation={true}
+          followsUserLocation={this.props.storeSettings.geolocalisation}
           // Récupère les coordonnées de l'utilisateur 1 seule fois pour centrer la carte sur son emplacement
           {...(this.state.firstChange === false
             ? {
@@ -185,7 +197,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (store) => {
   return {
-    storeSearch: store.setting.searchLocalization,
+    storeSettings: store.setting,
   };
 };
 
