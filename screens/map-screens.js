@@ -15,8 +15,8 @@ import { APP_COLORS } from "../styles/color";
 
 // Coordonnées par défaut du centre de Paris
 const DEFAULT_COORD = {
-  lat: 48.859268,
-  lon: 2.34706,
+  lat: 47.384714655010384,
+  lon: 2.449696697294711,
 };
 
 //const navigation = useNavigation();
@@ -144,8 +144,14 @@ class MapScreen extends Component {
             : {})}
           region={{
             ...coord,
-            latitudeDelta: 0.037370910726444606,
-            longitudeDelta: 0.029233060777187347,
+            latitudeDelta:
+              this.props.storeSettings.searchLocalization.name === "Default"
+                ? 19.411919009812614
+                : 0.037370910726444606,
+            longitudeDelta:
+              this.props.storeSettings.searchLocalization.name === "Default"
+                ? 15.498672053217886
+                : 0.029233060777187347,
           }}
         >
           {this.renderCircle(coord)}

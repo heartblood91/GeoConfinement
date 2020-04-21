@@ -5,8 +5,8 @@ const initializeState = {
   searchLocalization: {
     name: "Default",
     coord: {
-      lat: 48.859268,
-      lon: 2.34706,
+      lat: 47.384714655010384,
+      lon: 2.449696697294711,
     },
   },
   geolocalisation: false,
