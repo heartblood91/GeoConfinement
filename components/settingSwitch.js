@@ -10,10 +10,28 @@ import {
 import { APP_COLORS } from "../styles/color";
 
 class SettingSwitch extends Component {
+  handleChangeIsPress = () => {
+    const newValue = {
+      [this.props.nameSwitch]: !this.props.selectionSwitch,
+    };
+    this.props.handleChangeIsPress(newValue);
+  };
   render() {
     return (
-      <View style={styles.containerBody}>
-        <Text style={styles.textBody}>{this.props.textSwitch}</Text>
+      <View
+        style={
+          this.props.selectionSwitch
+            ? [styles.containerBody, styles.selectionSetting]
+            : styles.containerBody
+        }
+      >
+        <Text
+          style={styles.textBody}
+          onPress={() => this.handleChangeIsPress()}
+        >
+          {this.props.textSwitch}
+        </Text>
+
         <Switch
           style={styles.switchPosition}
           trackColor={{
@@ -62,9 +80,16 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
     elevation: 8,
   },
+  selectionSetting: {
+    //Border
+    borderWidth: 2,
+    borderColor: APP_COLORS.blueColor,
+  },
+
   textBody: {
     fontSize: Math.round(wp("7%")),
     color: APP_COLORS.blackColor,
+    width: wp("72%"),
   },
   switchPosition: {
     transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }],
