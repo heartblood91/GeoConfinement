@@ -1,10 +1,9 @@
 import React, { Component, Fragment } from "react";
 import MapView, { Circle, Marker } from "react-native-maps";
-import { Icon } from "react-native-elements";
+import { Icon, SearchBar } from "react-native-elements";
 import { StyleSheet, View } from "react-native";
 import LocationIQ from "react-native-locationiq";
 import { setCoordLocalization } from "../actions";
-import { SearchBar } from "react-native-elements";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -12,6 +11,7 @@ import {
 import { connect } from "react-redux";
 import { getDistance } from "geolib";
 
+import ShowTimer from "../components/timer";
 import { APP_COLORS } from "../styles/color";
 
 // Coordonnées par défaut du centre de Paris
@@ -19,8 +19,6 @@ const DEFAULT_COORD = {
   lat: 47.384714655010384,
   lon: 2.449696697294711,
 };
-
-//const navigation = useNavigation();
 
 class MapScreen extends Component {
   state = { search: "", firstChange: true, distance: 0 };
@@ -89,8 +87,6 @@ class MapScreen extends Component {
             strokeWidth={1}
             strokeColor={this.colorCircle("strokeColor")}
             fillColor={this.colorCircle("fillColor")}
-            //strokeColor={APP_COLORS.blueLightcolor}
-            //fillColor={APP_COLORS.blueCircle}
           />
           <Marker
             title="Maison"
@@ -228,6 +224,7 @@ class MapScreen extends Component {
           {this.renderCircle(coord)}
         </MapView>
         <Icon
+          raised
           name="settings"
           type="SimpleLineIcons"
           color={APP_COLORS.grayColor}
@@ -241,7 +238,6 @@ class MapScreen extends Component {
           }}
           onPress={() => this.props.navigation.navigate("Settings")}
         />
-
         <SearchBar
           lightTheme
           round
@@ -256,11 +252,25 @@ class MapScreen extends Component {
             top: hp("1%"),
             left: wp("3%"),
             width: wp("80%"),
+
+            // Shadow
+            borderRadius: 20,
+            backgroundColor: "#fff",
+
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 4,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: 4.65,
+            elevation: 8,
           }}
           style={{
             color: "black",
           }}
         />
+        {this.props.storeSettings.timer && <ShowTimer />}
       </View>
     );
   }
@@ -282,5 +292,4 @@ const mapDispatchToProps = {
   setCoordLocalization,
 };
 
-//
 export default connect(mapStateToProps, mapDispatchToProps)(MapScreen);
