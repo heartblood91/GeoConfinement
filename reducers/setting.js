@@ -1,4 +1,8 @@
-import { SET_SETTING, SET_LOCALISATION } from "../actions/action-types";
+import {
+  SET_SETTING,
+  SET_LOCALISATION,
+  SET_ADDRESS,
+} from "../actions/action-types";
 
 // initialise le store
 const initializeState = {
@@ -14,7 +18,13 @@ const initializeState = {
   visualWarning: false,
   timer: false,
   nightMode: false,
-  address: "",
+  address: {
+    name: "",
+    coord: {
+      lat: 0,
+      lon: 0,
+    },
+  },
   radius: 1000,
 };
 
@@ -23,6 +33,13 @@ export default function (state = initializeState, action) {
     case SET_LOCALISATION:
       return {
         ...state,
+        searchLocalization: action.payload,
+      };
+
+    case SET_ADDRESS:
+      return {
+        ...state,
+        address: action.payload,
         searchLocalization: action.payload,
       };
 

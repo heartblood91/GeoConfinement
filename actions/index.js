@@ -1,8 +1,11 @@
-import { SET_SETTING, SET_LOCALISATION } from "./action-types";
+import { SET_SETTING, SET_LOCALISATION, SET_ADDRESS } from "./action-types";
 
-export const setCoordLocalization = (searchLocalization) => {
+export const setCoord = (geocode, actionTypeBrute) => {
   return function (dispatch) {
-    dispatch({ type: SET_LOCALISATION, payload: searchLocalization });
+    const actionType =
+      actionTypeBrute === "LOCALISATION" ? SET_LOCALISATION : SET_ADDRESS;
+
+    dispatch({ type: actionType, payload: geocode });
   };
 };
 

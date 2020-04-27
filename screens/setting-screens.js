@@ -9,6 +9,7 @@ import {
 } from "react-native-responsive-screen";
 
 import SettingSwitch from "../components/settingSwitch";
+import SettingInput from "../components/settingInput";
 import { APP_COLORS } from "../styles/color";
 
 const initialStateIsPress = {
@@ -32,8 +33,6 @@ class SettingScreen extends Component {
   renderTextDescription = () => {
     const isPress = Object.assign({}, this.state.isPress);
 
-    // return "Cliquez sur un des paramètres pour avoir plus d'informations";
-
     switch (true) {
       case isPress.geolocalisation:
         return "Permet de vous géolocalisez sur la carte. Ce paramètre est modifiable uniquement si vous avez autorisé l'application à vous suivre.";
@@ -49,6 +48,9 @@ class SettingScreen extends Component {
 
       case isPress.nightMode:
         return "Permet de jongler entre le mode normal, et, le mode sombre de l'application.";
+
+      case isPress.address:
+        return "Permet d'enregistrer votre adresse. Cela vous évitera de la retaper à chaque fois.\nEntrez votre adresse puis cliquez sur la loupe";
 
       default:
         return "Cliquez sur un des paramètres pour avoir plus d'informations";
@@ -80,6 +82,13 @@ class SettingScreen extends Component {
           </Text>
         </View>
         <View style={styles.containerSetting}>
+          <SettingInput
+            textInput={"Adresse:"}
+            nameInput={"address"}
+            valueInput={this.props.storeSettings.address}
+            selectionInput={this.state.isPress.address}
+            handleChangeIsPress={this.handleChangeIsPress}
+          />
           <SettingSwitch
             textSwitch={"Géolocalisation"}
             nameSwitch={"geolocalisation"}

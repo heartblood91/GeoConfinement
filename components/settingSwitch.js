@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    height: hp("8%"),
+    height: hp("6%"),
 
     // Marge et padding:
     marginHorizontal: Math.round(wp("4%")),
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   },
 
   textBody: {
-    fontSize: Math.round(wp("7%")),
+    fontSize: Math.round(wp("5%")),
     color: APP_COLORS.blackColor,
     width: wp("72%"),
   },
