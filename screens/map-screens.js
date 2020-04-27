@@ -3,7 +3,7 @@ import MapView, { Circle, Marker } from "react-native-maps";
 import { Icon, SearchBar } from "react-native-elements";
 import { StyleSheet, View } from "react-native";
 import LocationIQ from "react-native-locationiq";
-import { setCoordLocalization } from "../actions";
+import { setCoord } from "../actions";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -21,7 +21,13 @@ const DEFAULT_COORD = {
 };
 
 class MapScreen extends Component {
-  state = { search: "", firstChange: true, distance: 0 };
+  state = {
+    search: "",
+    firstChange: true,
+    distance: 0,
+    error: "",
+    submitLocation: false,
+  };
 
   componentDidMount = () => {
     // Init le state avec une adresse si et seulement si elle existe dans le reducer
@@ -35,13 +41,23 @@ class MapScreen extends Component {
     }
   };
 
-  componentDidUpdate = (prevPros) => {
+  componentDidUpdate = (prevProps) => {
     //Change firstChange en fonction du paramètre "Géolocalisation"
     if (
       this.props.storeSettings.geolocalisation !==
-      prevPros.storeSettings.geolocalisation
+      prevProps.storeSettings.geolocalisation
     ) {
       this.setState({ firstChange: this.props.storeSettings.geolocalisation });
+    }
+
+    //Si searchLocalization name change dans le props mais pas dans le state:
+    if (
+      this.props.storeSettings.searchLocalization.name !==
+      prevProps.storeSettings.searchLocalization.name
+    ) {
+      this.setState({
+        search: this.props.storeSettings.searchLocalization.name,
+      });
     }
   };
 
@@ -66,10 +82,13 @@ class MapScreen extends Component {
           },
         };
 
+        // Je préviens que le formulaire a été soumis SANS erreur
+        this.setState({ error: "", submitLocation: true });
+
         // Puis les envoies au reducer pour mise à jour
-        this.props.setCoordLocalization(searchLocalization);
+        this.props.setCoord(searchLocalization, "LOCALISATION");
       })
-      .catch((error) => console.warn(error));
+      .catch((error) => this.setState({ error, submitLocation: true }));
   };
 
   // Permet de créer un cercle sur la carte si une adresse a été entré
@@ -159,7 +178,7 @@ class MapScreen extends Component {
       }
 
       // Puis les envoies au reducer pour mise à jour de la région
-      this.props.setCoordLocalization(userLocalization);
+      this.props.setCoord(userLocalization, "LOCALISATION");
 
       // On set le state pour avertir que nous avons récupéré les données de la 1ère géolocalisation de l'utilisateur
       this.setState({ firstChange: false });
@@ -184,6 +203,16 @@ class MapScreen extends Component {
 
     if (diffDistance >= 5) {
       this.setState({ distance });
+    }
+  };
+
+  renderError = () => {
+    if (this.state.error === "" && this.state.submitLocation) {
+      return "Parfait, merci, je m'occupe de l'affichage";
+    } else if (!this.state.submitLocation) {
+      return "";
+    } else if (this.state.error !== "" && this.state.submitLocation) {
+      return "Oups... Je ne trouve pas votre adresse...";
     }
   };
 
@@ -245,6 +274,10 @@ class MapScreen extends Component {
           value={this.state.search}
           onSubmitEditing={this.submitSearch}
           placeholder="Entrez votre adresse..."
+          errorMessage={this.renderError()}
+          errorStyle={
+            this.state.error === "" ? styles.inputNoError : styles.inputError
+          }
           placeholderTextColor={APP_COLORS.blackColor}
           inputStyle={{ color: APP_COLORS.blackColor }}
           containerStyle={{
@@ -267,7 +300,7 @@ class MapScreen extends Component {
             elevation: 8,
           }}
           style={{
-            color: "black",
+            color: APP_COLORS.blackColor,
           }}
         />
         {this.props.storeSettings.timer && <ShowTimer />}
@@ -280,6 +313,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  inputNoError: {
+    fontSize: Math.round(wp("4%")),
+    fontWeight: "700",
+    color: APP_COLORS.greenColor,
+  },
+  inputError: {
+    fontSize: Math.round(wp("4%")),
+    fontWeight: "700",
+    color: APP_COLORS.redColor,
+  },
 });
 
 const mapStateToProps = (store) => {
@@ -289,7 +332,7 @@ const mapStateToProps = (store) => {
 };
 
 const mapDispatchToProps = {
-  setCoordLocalization,
+  setCoord,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapScreen);
