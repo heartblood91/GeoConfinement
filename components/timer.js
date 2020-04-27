@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { Icon } from "react-native-elements";
 import { StyleSheet, View, Text } from "react-native";
-import { setCoordLocalization } from "../actions";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -140,8 +139,4 @@ const mapStateToProps = (store) => {
   };
 };
 
-const mapDispatchToProps = {
-  setCoordLocalization,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ShowTimer);
+export default connect(mapStateToProps, undefined)(ShowTimer);
