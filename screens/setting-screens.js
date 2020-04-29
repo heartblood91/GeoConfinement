@@ -1,5 +1,12 @@
-import React, { Component } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import React, { Component, Fragment } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { Icon } from "react-native-elements";
 import { handleChangeSettings } from "../actions";
 import { connect } from "react-redux";
@@ -23,6 +30,28 @@ const initialStateIsPress = {
 class SettingScreen extends Component {
   state = {
     isPress: initialStateIsPress,
+    isKeyboard: false,
+  };
+
+  // Ajoute un listener sur l'affichage du keyboard
+  componentDidMount() {
+    this.keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () =>
+      this.keyboardIsVisible(true)
+    );
+    this.keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () =>
+      this.keyboardIsVisible(false)
+    );
+  }
+
+  // Enlève le listener lors du démontage
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
+
+  // Permet de save dans le state la présence / absence du clavier
+  keyboardIsVisible = (isShow) => {
+    this.setState({ isKeyboard: isShow });
   };
 
   handleChangeIsPress = (valueIsPress) => {
@@ -59,83 +88,100 @@ class SettingScreen extends Component {
         return "Cliquez sur un des paramètres pour avoir plus d'informations";
     }
   };
+
   render() {
     return (
-      <View style={{ flex: 1 }}>
-        <View style={styles.containerReturn}>
-          <Icon
-            name="arrow-back"
-            type="SimpleLineIcons"
-            color={APP_COLORS.blueLightcolor}
-            reverseColor="#fff"
-            reverse
-            size={Math.round(wp("5%"))}
-            onPress={() => this.props.navigation.navigate("Home")}
-          />
-          <Text
-            onPress={() => this.props.navigation.navigate("Home")}
-            style={styles.textReturn}
-          >
-            Retour à la carte
-          </Text>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{ flex: 1 }}>
+          <View style={styles.containerReturn}>
+            <Icon
+              name="arrow-back"
+              type="SimpleLineIcons"
+              color={APP_COLORS.blueLightcolor}
+              reverseColor="#fff"
+              reverse
+              size={Math.round(wp("5%"))}
+              onPress={() => this.props.navigation.navigate("Home")}
+            />
+
+            <Text
+              onPress={() => this.props.navigation.navigate("Home")}
+              style={styles.textReturn}
+            >
+              Retour à la carte
+            </Text>
+          </View>
+          {!this.state.isKeyboard && (
+            <View style={styles.descriptionContainer}>
+              <Text style={styles.textDescription}>
+                {this.renderTextDescription()}
+              </Text>
+            </View>
+          )}
+          <KeyboardAvoidingView behavior={"height"} style={{ flex: 1 }}>
+            <View style={styles.containerSetting}>
+              <SettingInput
+                textInput={"Adresse:"}
+                nameInput={"address"}
+                valueInput={this.props.storeSettings.address}
+                selectionInput={this.state.isPress.address}
+                handleChangeIsPress={this.handleChangeIsPress}
+              />
+              {!this.state.isKeyboard && (
+                <Fragment>
+                  <SettingSwitch
+                    textSwitch={"Compte à rebours"}
+                    nameSwitch={"timer"}
+                    valueSwitch={this.props.storeSettings.timer}
+                    selectionSwitch={this.state.isPress.timer}
+                    handleChangeIsPress={this.handleChangeIsPress}
+                  />
+
+                  <SettingSwitch
+                    textSwitch={"Couleur zone dynamique"}
+                    nameSwitch={"visualWarning"}
+                    valueSwitch={this.props.storeSettings.visualWarning}
+                    selectionSwitch={this.state.isPress.visualWarning}
+                    handleChangeIsPress={this.handleChangeIsPress}
+                  />
+
+                  <SettingSwitch
+                    textSwitch={"Géolocalisation"}
+                    nameSwitch={"geolocalisation"}
+                    valueSwitch={this.props.storeSettings.geolocalisation}
+                    selectionSwitch={this.state.isPress.geolocalisation}
+                    handleChangeIsPress={this.handleChangeIsPress}
+                  />
+
+                  <SettingSwitch
+                    textSwitch={"Mode nuit"}
+                    nameSwitch={"nightMode"}
+                    valueSwitch={this.props.storeSettings.nightMode}
+                    selectionSwitch={this.state.isPress.nightMode}
+                    handleChangeIsPress={this.handleChangeIsPress}
+                  />
+
+                  <SettingSwitch
+                    textSwitch={"Notification"}
+                    nameSwitch={"notification"}
+                    valueSwitch={this.props.storeSettings.notification}
+                    selectionSwitch={this.state.isPress.notification}
+                    handleChangeIsPress={this.handleChangeIsPress}
+                  />
+                </Fragment>
+              )}
+
+              <SettingInput
+                textInput={"Rayon (en m):"}
+                nameInput={"radius"}
+                valueInput={this.props.storeSettings.radius}
+                selectionInput={this.state.isPress.radius}
+                handleChangeIsPress={this.handleChangeIsPress}
+              />
+            </View>
+          </KeyboardAvoidingView>
         </View>
-        <View style={styles.descriptionContainer}>
-          <Text style={styles.textDescription}>
-            {this.renderTextDescription()}
-          </Text>
-        </View>
-        <View style={styles.containerSetting}>
-          <SettingInput
-            textInput={"Adresse:"}
-            nameInput={"address"}
-            valueInput={this.props.storeSettings.address}
-            selectionInput={this.state.isPress.address}
-            handleChangeIsPress={this.handleChangeIsPress}
-          />
-          <SettingInput
-            textInput={"Rayon (en m):"}
-            nameInput={"radius"}
-            valueInput={this.props.storeSettings.radius}
-            selectionInput={this.state.isPress.radius}
-            handleChangeIsPress={this.handleChangeIsPress}
-          />
-          <SettingSwitch
-            textSwitch={"Géolocalisation"}
-            nameSwitch={"geolocalisation"}
-            valueSwitch={this.props.storeSettings.geolocalisation}
-            selectionSwitch={this.state.isPress.geolocalisation}
-            handleChangeIsPress={this.handleChangeIsPress}
-          />
-          <SettingSwitch
-            textSwitch={"Notification"}
-            nameSwitch={"notification"}
-            valueSwitch={this.props.storeSettings.notification}
-            selectionSwitch={this.state.isPress.notification}
-            handleChangeIsPress={this.handleChangeIsPress}
-          />
-          <SettingSwitch
-            textSwitch={"Couleur zone dynamique"}
-            nameSwitch={"visualWarning"}
-            valueSwitch={this.props.storeSettings.visualWarning}
-            selectionSwitch={this.state.isPress.visualWarning}
-            handleChangeIsPress={this.handleChangeIsPress}
-          />
-          <SettingSwitch
-            textSwitch={"Compte à rebours"}
-            nameSwitch={"timer"}
-            valueSwitch={this.props.storeSettings.timer}
-            selectionSwitch={this.state.isPress.timer}
-            handleChangeIsPress={this.handleChangeIsPress}
-          />
-          <SettingSwitch
-            textSwitch={"Mode nuit"}
-            nameSwitch={"nightMode"}
-            valueSwitch={this.props.storeSettings.nightMode}
-            selectionSwitch={this.state.isPress.nightMode}
-            handleChangeIsPress={this.handleChangeIsPress}
-          />
-        </View>
-      </View>
+      </TouchableWithoutFeedback>
     );
   }
 }
