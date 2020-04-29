@@ -52,6 +52,9 @@ class SettingScreen extends Component {
       case isPress.address:
         return "Permet d'enregistrer votre adresse. Cela vous évitera de la retaper à chaque fois.\nEntrez votre adresse puis cliquez sur la loupe";
 
+      case isPress.radius:
+        return "Permet de modifier la taille du périmètre, exprimée en mètre.\nPar défaut, elle est fixée à 1000m";
+
       default:
         return "Cliquez sur un des paramètres pour avoir plus d'informations";
     }
@@ -87,6 +90,13 @@ class SettingScreen extends Component {
             nameInput={"address"}
             valueInput={this.props.storeSettings.address}
             selectionInput={this.state.isPress.address}
+            handleChangeIsPress={this.handleChangeIsPress}
+          />
+          <SettingInput
+            textInput={"Rayon (en m):"}
+            nameInput={"radius"}
+            valueInput={this.props.storeSettings.radius}
+            selectionInput={this.state.isPress.radius}
             handleChangeIsPress={this.handleChangeIsPress}
           />
           <SettingSwitch
@@ -141,7 +151,7 @@ const styles = StyleSheet.create({
 
   containerSetting: {
     flex: 1,
-    justifyContent: "flex-start",
+    justifyContent: "space-evenly",
   },
   descriptionContainer: {
     paddingHorizontal: Math.round(wp("5%")),

@@ -12,7 +12,7 @@ import { setCoord } from "../actions";
 import { APP_COLORS } from "../styles/color";
 
 class SettingInput extends Component {
-  state = { search: "", error: "", submitLocation: false };
+  state = { inputValue: "", error: "", submitLocation: false };
 
   handleChangeIsPress = () => {
     const newValue = {
@@ -24,15 +24,20 @@ class SettingInput extends Component {
   componentDidMount = () => {
     // Init le state avec une adresse si et seulement si elle existe dans le reducer
     if (this.props.valueInput !== "") {
+      const valueToInput =
+        this.props.nameInput === "address"
+          ? this.props.valueInput.name
+          : this.props.valueInput;
+
       this.setState({
-        search: this.props.valueInput.name,
+        inputValue: valueToInput,
       });
     }
   };
 
   // Mets à jour le texte dans la search bar
-  updateSearch = (search) => {
-    this.setState({ search });
+  updateInput = (inputValue) => {
+    this.setState({ inputValue });
   };
 
   submitSearch = () => {
@@ -40,11 +45,11 @@ class SettingInput extends Component {
     LocationIQ.init("***REMOVED***"); // masquer l'API KEY sur Github
 
     // Puis effectue la recherche
-    LocationIQ.search(this.state.search)
+    LocationIQ.search(this.state.inputValue)
       .then((json) => {
         // Récupère les coordonnées
         const searchAddress = {
-          name: this.state.search.trim(),
+          name: this.state.inputValue.trim(),
           coord: {
             lat: parseFloat(json[0].lat),
             lon: parseFloat(json[0].lon),
@@ -71,65 +76,125 @@ class SettingInput extends Component {
     }
   };
 
+  renderStyle = () => {
+    let newStyles = [];
+    if (this.props.selectionInput) {
+      newStyles.push(styles.selectionSetting, styles.containerBody);
+    } else {
+      newStyles.push(styles.containerBody);
+    }
+
+    if (this.props.nameInput === "address") {
+      newStyles.push(styles.containerBodyColumns);
+    } else if (this.props.nameInput === "radius") {
+      newStyles.push(styles.containerBodyRow);
+    }
+
+    return newStyles;
+  };
+
+  // Render radius
+  renderInputRow = () => {
+    return (
+      <Input
+        inputContainerStyle={styles.inputPositionRow}
+        placeholderTextColor={APP_COLORS.grayColor}
+        maxLength={6}
+        placeholder={"Distance en m"}
+        onChangeText={this.updateInput}
+        value={this.state.inputValue.toString()}
+        keyboardType={"number-pad"}
+      />
+    );
+  };
+
+  // Render de l'address
+  renderInputColumn = () => {
+    return (
+      <Input
+        inputContainerStyle={styles.inputPositionColumns}
+        placeholderTextColor={APP_COLORS.grayColor}
+        placeholder={"Entrez votre adresse ici"}
+        onChangeText={this.updateInput}
+        onSubmitEditing={this.submitSearch}
+        value={this.state.inputValue}
+        autoCompleteType={"street-address"}
+        dataDetectorTypes={"address"}
+        textContentType={"addressCity"}
+        errorMessage={this.renderError()}
+        errorStyle={
+          this.state.error === "" ? styles.inputNoError : styles.inputError
+        }
+        keyboardType={"default"}
+        rightIcon={
+          <Icon
+            type="material-community"
+            name="map-search"
+            size={Math.round(wp("10%"))}
+            color={APP_COLORS.blackColor}
+            onPress={this.submitSearch}
+          />
+        }
+      />
+    );
+  };
+
   render() {
     return (
-      <View
-        style={
-          this.props.selectionInput
-            ? [styles.containerBody, styles.selectionSetting]
-            : styles.containerBody
-        }
-      >
+      <View style={this.renderStyle()}>
         <Text
-          style={styles.textBody}
+          style={
+            this.props.nameInput === "address"
+              ? [styles.textBody, styles.textBodyColumns]
+              : [styles.textBody, styles.textBodyRows]
+          }
           onPress={() => this.handleChangeIsPress()}
         >
           {this.props.textInput}
         </Text>
-
-        <Input
-          inputContainerStyle={styles.inputPosition}
-          placeholderTextColor={APP_COLORS.grayColor}
-          placeholder="Entrez votre adresse ici"
-          onChangeText={this.updateSearch}
-          onSubmitEditing={this.submitSearch}
-          value={this.state.search}
-          errorStyle={{ color: "red" }}
-          autoCompleteType={"street-address"}
-          dataDetectorTypes={"address"}
-          textContentType={"addressCity"}
-          errorMessage={this.renderError()}
-          errorStyle={
-            this.state.error === "" ? styles.inputNoError : styles.inputError
-          }
-          keyboardType={
-            this.props.nameInput === "radius" ? "number-pad" : "default"
-          }
-          rightIcon={
-            <Icon
-              type="material-community"
-              name="map-search"
-              size={Math.round(wp("10%"))}
-              color={APP_COLORS.blackColor}
-              onPress={this.submitSearch}
-            />
-          }
-        />
+        {this.props.nameInput === "address"
+          ? this.renderInputColumn()
+          : this.renderInputRow()}
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  containerBody: {
+  // Render Style Row
+  containerBodyRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    height: hp("6%"),
+  },
+  textBodyRows: {
+    width: wp("68%"),
+  },
+  inputPositionRow: {
+    maxWidth: wp("14%"),
+    maxHeight: hp("4%"),
+  },
+
+  // Render Style Column
+  containerBodyColumns: {
     justifyContent: "center",
     alignItems: "flex-start",
     height: hp("12%"),
+  },
+  textBodyColumns: {
+    width: wp("88%"),
+  },
 
+  inputPositionColumns: {
+    maxWidth: wp("80%"),
+  },
+
+  // Commun
+  containerBody: {
     // Marge et padding:
     marginHorizontal: Math.round(wp("4%")),
     paddingHorizontal: Math.round(wp("3%")),
-    marginVertical: Math.round(hp("1.1%")),
 
     // Shadow
     borderRadius: 20,
@@ -153,11 +218,8 @@ const styles = StyleSheet.create({
   textBody: {
     fontSize: Math.round(wp("5%")),
     color: APP_COLORS.blackColor,
-    width: wp("88%"),
   },
-  inputPosition: {
-    maxWidth: wp("80%"),
-  },
+
   inputNoError: {
     fontSize: Math.round(wp("4%")),
     fontWeight: "700",

@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
     // Marge et padding:
     marginHorizontal: Math.round(wp("4%")),
     paddingHorizontal: Math.round(wp("3%")),
-    marginVertical: Math.round(hp("1.1%")),
 
     // Shadow
     borderRadius: 20,
@@ -92,7 +91,7 @@ const styles = StyleSheet.create({
     width: wp("72%"),
   },
   switchPosition: {
-    transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }],
+    transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
   },
 });
 
