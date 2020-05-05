@@ -32,11 +32,11 @@ class MapScreen extends Component {
   componentDidMount = () => {
     // Init le state avec une adresse si et seulement si elle existe dans le reducer
     if (
-      this.props.storeSettings.searchLocalization.name !== "Default" &&
-      this.props.storeSettings.searchLocalization.name !== "Géolocalisation"
+      this.props.storeSettings.searchLocalization.value !== "Default" &&
+      this.props.storeSettings.searchLocalization.value !== "Géolocalisation"
     ) {
       this.setState({
-        search: this.props.storeSettings.searchLocalization.name,
+        search: this.props.storeSettings.searchLocalization.value,
       });
     }
   };
@@ -52,11 +52,11 @@ class MapScreen extends Component {
 
     //Si searchLocalization name change dans le props mais pas dans le state:
     if (
-      this.props.storeSettings.searchLocalization.name !==
-      prevProps.storeSettings.searchLocalization.name
+      this.props.storeSettings.searchLocalization.value !==
+      prevProps.storeSettings.searchLocalization.value
     ) {
       this.setState({
-        search: this.props.storeSettings.searchLocalization.name,
+        search: this.props.storeSettings.searchLocalization.value,
       });
     }
   };
@@ -75,7 +75,7 @@ class MapScreen extends Component {
       .then((json) => {
         // Récupère les coordonnées
         const searchLocalization = {
-          name: this.state.search.trim(),
+          value: this.state.search.trim(),
           coord: {
             lat: parseFloat(json[0].lat),
             lon: parseFloat(json[0].lon),
@@ -95,7 +95,7 @@ class MapScreen extends Component {
   // +
   // Ajoute un marker positionné aux coordonées de cette adresse
   renderCircle = (coord) => {
-    if (this.props.storeSettings.searchLocalization.name !== "Default") {
+    if (this.props.storeSettings.searchLocalization.value !== "Default") {
       return (
         <Fragment>
           <Circle
@@ -112,7 +112,7 @@ class MapScreen extends Component {
             coordinate={{
               ...coord,
             }}
-            description={this.props.storeSettings.searchLocalization.name}
+            description={this.props.storeSettings.searchLocalization.value}
           />
         </Fragment>
       );
@@ -241,11 +241,11 @@ class MapScreen extends Component {
           region={{
             ...coord,
             latitudeDelta:
-              this.props.storeSettings.searchLocalization.name === "Default"
+              this.props.storeSettings.searchLocalization.value === "Default"
                 ? 19.411919009812614
                 : 0.037370910726444606,
             longitudeDelta:
-              this.props.storeSettings.searchLocalization.name === "Default"
+              this.props.storeSettings.searchLocalization.value === "Default"
                 ? 15.498672053217886
                 : 0.029233060777187347,
           }}

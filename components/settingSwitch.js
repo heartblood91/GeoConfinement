@@ -10,26 +10,22 @@ import {
 import { APP_COLORS } from "../styles/color";
 
 class SettingSwitch extends Component {
-  handleChangeIsPress = () => {
-    const newValue = {
-      [this.props.nameSwitch]: !this.props.selectionSwitch,
-    };
-    this.props.handleChangeIsPress(newValue);
-  };
   render() {
     return (
       <View
         style={
-          this.props.selectionSwitch
+          this.props.isPress
             ? [styles.containerBody, styles.selectionSetting]
             : styles.containerBody
         }
       >
         <Text
           style={styles.textBody}
-          onPress={() => this.handleChangeIsPress()}
+          onPress={() =>
+            this.props.handleChangeSettings(this.props.nameSwitch, "isPress")
+          }
         >
-          {this.props.textSwitch}
+          {this.props.switch.text}
         </Text>
 
         <Switch
@@ -40,15 +36,14 @@ class SettingSwitch extends Component {
           }}
           ios_backgroundColor={APP_COLORS.graySwitch}
           thumbColor={
-            this.props.valueSwitch ? APP_COLORS.greenColor : APP_COLORS.redColor
+            this.props.switch.value
+              ? APP_COLORS.greenColor
+              : APP_COLORS.redColor
           }
           onChange={() =>
-            this.props.handleChangeSettings(
-              !this.props.valueSwitch,
-              this.props.nameSwitch
-            )
+            this.props.handleChangeSettings(this.props.nameSwitch, "value")
           }
-          value={this.props.valueSwitch}
+          value={this.props.switch.value}
         />
       </View>
     );
@@ -95,8 +90,16 @@ const styles = StyleSheet.create({
   },
 });
 
+const mapStateToProps = (store, ownProps) => {
+  // En fonction des props du component, on récupère les infos dans le store
+  return {
+    switch: store.tempSetting[ownProps.nameSwitch],
+    isPress: store.tempSetting.isPress[ownProps.nameSwitch],
+  };
+};
+
 const mapDispatchToProps = {
   handleChangeSettings,
 };
 
-export default connect(undefined, mapDispatchToProps)(SettingSwitch);
+export default connect(mapStateToProps, mapDispatchToProps)(SettingSwitch);

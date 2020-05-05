@@ -1,4 +1,9 @@
-import { SET_SETTING, SET_LOCALISATION, SET_ADDRESS } from "./action-types";
+import {
+  SET_SETTING,
+  SET_LOCALISATION,
+  SET_ADDRESS,
+  SET_IS_PRESS,
+} from "./action-types";
 
 export const setCoord = (geocode, actionTypeBrute) => {
   return function (dispatch) {
@@ -9,8 +14,10 @@ export const setCoord = (geocode, actionTypeBrute) => {
   };
 };
 
-export const handleChangeSettings = (value, name) => {
+export const handleChangeSettings = (name, type, inputValue) => {
+  const actionType = type === "isPress" ? SET_IS_PRESS : SET_SETTING;
+
   return function (dispatch) {
-    dispatch({ type: SET_SETTING, payload: { [name]: value } });
+    dispatch({ type: actionType, payload: { name, type, inputValue } });
   };
 };

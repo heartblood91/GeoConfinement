@@ -19,19 +19,8 @@ import SettingSwitch from "../components/settingSwitch";
 import SettingInput from "../components/settingInput";
 import { APP_COLORS } from "../styles/color";
 
-const initialStateIsPress = {
-  geolocalisation: false,
-  notification: false,
-  visualWarning: false,
-  timer: false,
-  nightMode: false,
-};
-
 class SettingScreen extends Component {
-  state = {
-    isPress: initialStateIsPress,
-    isKeyboard: false,
-  };
+  state = { isKeyboard: false };
 
   // Ajoute un listener sur l'affichage du keyboard
   componentDidMount() {
@@ -54,13 +43,8 @@ class SettingScreen extends Component {
     this.setState({ isKeyboard: isShow });
   };
 
-  handleChangeIsPress = (valueIsPress) => {
-    // Remet l'ensemble des isPress à l'initial + je passe à true celui qui a été touché en dernier
-    this.setState({ isPress: { ...initialStateIsPress, ...valueIsPress } });
-  };
-
   renderTextDescription = () => {
-    const isPress = Object.assign({}, this.state.isPress);
+    const isPress = Object.assign({}, this.props.storeSettings.isPress);
 
     switch (true) {
       case isPress.geolocalisation:
@@ -120,64 +104,18 @@ class SettingScreen extends Component {
           )}
           <KeyboardAvoidingView behavior={"height"} style={{ flex: 1 }}>
             <View style={styles.containerSetting}>
-              <SettingInput
-                textInput={"Adresse:"}
-                nameInput={"address"}
-                valueInput={this.props.storeSettings.address}
-                selectionInput={this.state.isPress.address}
-                handleChangeIsPress={this.handleChangeIsPress}
-              />
+              <SettingInput nameInput={"address"} />
               {!this.state.isKeyboard && (
                 <Fragment>
-                  <SettingSwitch
-                    textSwitch={"Compte à rebours"}
-                    nameSwitch={"timer"}
-                    valueSwitch={this.props.storeSettings.timer}
-                    selectionSwitch={this.state.isPress.timer}
-                    handleChangeIsPress={this.handleChangeIsPress}
-                  />
-
-                  <SettingSwitch
-                    textSwitch={"Couleur zone dynamique"}
-                    nameSwitch={"visualWarning"}
-                    valueSwitch={this.props.storeSettings.visualWarning}
-                    selectionSwitch={this.state.isPress.visualWarning}
-                    handleChangeIsPress={this.handleChangeIsPress}
-                  />
-
-                  <SettingSwitch
-                    textSwitch={"Géolocalisation"}
-                    nameSwitch={"geolocalisation"}
-                    valueSwitch={this.props.storeSettings.geolocalisation}
-                    selectionSwitch={this.state.isPress.geolocalisation}
-                    handleChangeIsPress={this.handleChangeIsPress}
-                  />
-
-                  <SettingSwitch
-                    textSwitch={"Mode nuit"}
-                    nameSwitch={"nightMode"}
-                    valueSwitch={this.props.storeSettings.nightMode}
-                    selectionSwitch={this.state.isPress.nightMode}
-                    handleChangeIsPress={this.handleChangeIsPress}
-                  />
-
-                  <SettingSwitch
-                    textSwitch={"Notification"}
-                    nameSwitch={"notification"}
-                    valueSwitch={this.props.storeSettings.notification}
-                    selectionSwitch={this.state.isPress.notification}
-                    handleChangeIsPress={this.handleChangeIsPress}
-                  />
+                  <SettingSwitch nameSwitch={"timer"} />
+                  <SettingSwitch nameSwitch={"visualWarning"} />
+                  <SettingSwitch nameSwitch={"geolocalisation"} />
+                  <SettingSwitch nameSwitch={"nightMode"} />
+                  <SettingSwitch nameSwitch={"notification"} />
                 </Fragment>
               )}
 
-              <SettingInput
-                textInput={"Rayon (en m):"}
-                nameInput={"radius"}
-                valueInput={this.props.storeSettings.radius}
-                selectionInput={this.state.isPress.radius}
-                handleChangeIsPress={this.handleChangeIsPress}
-              />
+              <SettingInput nameInput={"radius"} />
             </View>
           </KeyboardAvoidingView>
         </View>
@@ -217,7 +155,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (store) => {
-  return { storeSettings: store.setting };
+  return { storeSettings: store.tempSetting };
 };
 
 const mapDispatchToProps = {

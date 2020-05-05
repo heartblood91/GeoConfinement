@@ -14,24 +14,10 @@ import { APP_COLORS } from "../styles/color";
 class SettingInput extends Component {
   state = { inputValue: "", error: "", submitLocation: false };
 
-  handleChangeIsPress = () => {
-    const newValue = {
-      [this.props.nameInput]: !this.props.selectionInput,
-    };
-    this.props.handleChangeIsPress(newValue);
-  };
-
   componentDidMount = () => {
     // Init le state avec une adresse si et seulement si elle existe dans le reducer
-    if (this.props.valueInput !== "") {
-      const valueToInput =
-        this.props.nameInput === "address"
-          ? this.props.valueInput.name
-          : this.props.valueInput;
-
-      this.setState({
-        inputValue: valueToInput,
-      });
+    if (this.props.input.value !== "" && this.props.nameInput === "address") {
+      this.setState({ inputValue: this.props.input.value });
     }
   };
 
@@ -49,11 +35,12 @@ class SettingInput extends Component {
       .then((json) => {
         // Récupère les coordonnées
         const searchAddress = {
-          name: this.state.inputValue.trim(),
+          value: this.state.inputValue.trim(),
           coord: {
             lat: parseFloat(json[0].lat),
             lon: parseFloat(json[0].lon),
           },
+          text: "Adresse:",
         };
 
         // Je préviens que le formulaire a été soumis SANS erreur
@@ -78,7 +65,7 @@ class SettingInput extends Component {
 
   renderStyle = () => {
     let newStyles = [];
-    if (this.props.selectionInput) {
+    if (this.props.isPress) {
       newStyles.push(styles.selectionSetting, styles.containerBody);
     } else {
       newStyles.push(styles.containerBody);
@@ -101,8 +88,14 @@ class SettingInput extends Component {
         placeholderTextColor={APP_COLORS.grayColor}
         maxLength={6}
         placeholder={"Distance en m"}
-        onChangeText={this.updateInput}
-        value={this.state.inputValue.toString()}
+        onChangeText={(inputValue) =>
+          this.props.handleChangeSettings(
+            this.props.nameInput,
+            "input",
+            inputValue
+          )
+        }
+        value={this.props.input.value.toString()}
         keyboardType={"number-pad"}
       />
     );
@@ -148,9 +141,11 @@ class SettingInput extends Component {
               ? [styles.textBody, styles.textBodyColumns]
               : [styles.textBody, styles.textBodyRows]
           }
-          onPress={() => this.handleChangeIsPress()}
+          onPress={() =>
+            this.props.handleChangeSettings(this.props.nameInput, "isPress")
+          }
         >
-          {this.props.textInput}
+          {this.props.input.text}
         </Text>
         {this.props.nameInput === "address"
           ? this.renderInputColumn()
@@ -232,9 +227,17 @@ const styles = StyleSheet.create({
   },
 });
 
+const mapStateToProps = (store, ownProps) => {
+  // En fonction des props du component, on récupère les infos dans le store
+  return {
+    input: store.tempSetting[ownProps.nameInput],
+    isPress: store.tempSetting.isPress[ownProps.nameInput],
+  };
+};
+
 const mapDispatchToProps = {
   handleChangeSettings,
   setCoord,
 };
 
-export default connect(undefined, mapDispatchToProps)(SettingInput);
+export default connect(mapStateToProps, mapDispatchToProps)(SettingInput);
