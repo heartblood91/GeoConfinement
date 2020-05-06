@@ -287,8 +287,8 @@ class MapScreen extends Component {
           size={Math.round(wp("5%"))}
           containerStyle={{
             position: "absolute",
-            bottom: hp("1%"),
-            left: wp("85%"),
+            bottom: this.props.storeSettings.timer ? hp("10%") : hp("1%"),
+            left: wp("83.5%"),
           }}
           onPress={() => this.refocus(coord)}
         />
