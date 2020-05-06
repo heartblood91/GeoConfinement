@@ -6,7 +6,7 @@ import {
 
 //Initiale Store of isPress
 const initialStateIsPress = {
-  geolocalisation: false,
+  geolocation: false,
   notification: false,
   visualWarning: false,
   timer: false,
@@ -27,7 +27,7 @@ const initializeState = {
     value: false,
     text: "Couleur zone dynamique",
   },
-  geolocalisation: {
+  geolocation: {
     value: false,
     text: "Géolocalisation",
   },

@@ -1,6 +1,6 @@
 import {
   SET_SETTING,
-  SET_LOCALISATION,
+  SET_location,
   SET_ADDRESS,
   SET_IS_PRESS,
   SYNCHRO_SETTING_TEMP,
@@ -9,7 +9,7 @@ import {
 export const setCoord = (geocode, actionTypeBrute) => {
   return function (dispatch) {
     const actionType =
-      actionTypeBrute === "LOCALISATION" ? SET_LOCALISATION : SET_ADDRESS;
+      actionTypeBrute === "location" ? SET_location : SET_ADDRESS;
 
     dispatch({ type: actionType, payload: geocode });
   };

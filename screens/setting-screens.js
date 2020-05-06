@@ -48,7 +48,7 @@ class SettingScreen extends Component {
     const isPress = Object.assign({}, this.props.storeTempSettings.isPress);
 
     switch (true) {
-      case isPress.geolocalisation:
+      case isPress.geolocation:
         return "Permet de vous géolocalisez sur la carte. Ce paramètre est modifiable uniquement si vous avez autorisé l'application à vous suivre.";
 
       case isPress.notification:
@@ -84,7 +84,7 @@ class SettingScreen extends Component {
     delete newAddressObject.text;
     let tempSetting = {
       address: { ...newAddressObject },
-      geolocalisation: this.props.storeTempSettings.geolocalisation.value,
+      geolocation: this.props.storeTempSettings.geolocation.value,
       nightMode: this.props.storeTempSettings.nightMode.value,
       notification: this.props.storeTempSettings.notification.value,
       radius: this.props.storeTempSettings.radius.value,
@@ -92,14 +92,14 @@ class SettingScreen extends Component {
       timer: this.props.storeTempSettings.timer.value,
     };
 
-    // Si une adresse a été paramétré alors on enregistre les données dans searchLocalization (sauf si similaire )
+    // Si une adresse a été paramétré alors on enregistre les données dans searchlocation (sauf si similaire )
     if (
       this.props.storeTempSettings.address.value !== "" &&
-      this.props.storeSettings.searchLocalization.value !==
+      this.props.storeSettings.searchlocation.value !==
         this.props.storeTempSettings.address.value
     ) {
       tempSetting = Object.assign(tempSetting, {
-        searchLocalization: { ...newAddressObject },
+        searchlocation: { ...newAddressObject },
       });
     }
 
@@ -143,7 +143,7 @@ class SettingScreen extends Component {
                 <Fragment>
                   <SettingSwitch nameSwitch={"timer"} />
                   <SettingSwitch nameSwitch={"visualWarning"} />
-                  <SettingSwitch nameSwitch={"geolocalisation"} />
+                  <SettingSwitch nameSwitch={"geolocation"} />
                   <SettingSwitch nameSwitch={"nightMode"} />
                   <SettingSwitch nameSwitch={"notification"} />
                 </Fragment>

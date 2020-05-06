@@ -1,18 +1,15 @@
-import {
-  SET_LOCALISATION,
-  SYNCHRO_SETTING_TEMP,
-} from "../actions/action-types";
+import { SET_location, SYNCHRO_SETTING_TEMP } from "../actions/action-types";
 
 // initialise le store
 const initializeState = {
-  searchLocalization: {
+  searchlocation: {
     value: "Default",
     coord: {
       lat: 47.384714655010384,
       lon: 2.449696697294711,
     },
   },
-  geolocalisation: false,
+  geolocation: false,
   notification: false,
   visualWarning: false,
   timer: false,
@@ -29,10 +26,10 @@ const initializeState = {
 
 export default function (state = initializeState, action) {
   switch (action.type) {
-    case SET_LOCALISATION:
+    case SET_location:
       return {
         ...state,
-        searchLocalization: action.payload,
+        searchlocation: action.payload,
       };
 
     case SYNCHRO_SETTING_TEMP:

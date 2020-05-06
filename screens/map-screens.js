@@ -32,11 +32,11 @@ class MapScreen extends Component {
   componentDidMount = () => {
     // Init le state avec une adresse si et seulement si elle existe dans le reducer
     if (
-      this.props.storeSettings.searchLocalization.value !== "Default" &&
-      this.props.storeSettings.searchLocalization.value !== "Géolocalisation"
+      this.props.storeSettings.searchlocation.value !== "Default" &&
+      this.props.storeSettings.searchlocation.value !== "Géolocalisation"
     ) {
       this.setState({
-        search: this.props.storeSettings.searchLocalization.value,
+        search: this.props.storeSettings.searchlocation.value,
       });
     }
   };
@@ -44,21 +44,21 @@ class MapScreen extends Component {
   componentDidUpdate = (prevProps) => {
     //Change firstChange en fonction du paramètre "Géolocalisation"
     if (
-      this.props.storeSettings.geolocalisation !==
-      prevProps.storeSettings.geolocalisation
+      this.props.storeSettings.geolocation !==
+      prevProps.storeSettings.geolocation
     ) {
-      this.setState({ firstChange: this.props.storeSettings.geolocalisation });
+      this.setState({ firstChange: this.props.storeSettings.geolocation });
     }
 
-    //Si searchLocalization value change dans les props mais pas dans le state (sauf pour Default + Géolocalisation):
+    //Si searchlocation value change dans les props mais pas dans le state (sauf pour Default + Géolocalisation):
     if (
-      this.props.storeSettings.searchLocalization.value !==
-        prevProps.storeSettings.searchLocalization.value &&
-      this.props.storeSettings.searchLocalization.value !== "Default" &&
-      this.props.storeSettings.searchLocalization.value !== "Géolocalisation"
+      this.props.storeSettings.searchlocation.value !==
+        prevProps.storeSettings.searchlocation.value &&
+      this.props.storeSettings.searchlocation.value !== "Default" &&
+      this.props.storeSettings.searchlocation.value !== "Géolocalisation"
     ) {
       this.setState({
-        search: this.props.storeSettings.searchLocalization.value,
+        search: this.props.storeSettings.searchlocation.value,
       });
     }
   };
@@ -76,7 +76,7 @@ class MapScreen extends Component {
     LocationIQ.search(this.state.search)
       .then((json) => {
         // Récupère les coordonnées
-        const searchLocalization = {
+        const searchlocation = {
           value: this.state.search.trim(),
           coord: {
             lat: parseFloat(json[0].lat),
@@ -88,7 +88,7 @@ class MapScreen extends Component {
         this.setState({ error: "", submitLocation: true });
 
         // Puis les envoies au reducer pour mise à jour
-        this.props.setCoord(searchLocalization, "LOCALISATION");
+        this.props.setCoord(searchlocation, "location");
       })
       .catch((error) => this.setState({ error, submitLocation: true }));
   };
@@ -97,7 +97,7 @@ class MapScreen extends Component {
   // +
   // Ajoute un marker positionné aux coordonées de cette adresse
   renderCircle = (coord) => {
-    if (this.props.storeSettings.searchLocalization.value !== "Default") {
+    if (this.props.storeSettings.searchlocation.value !== "Default") {
       return (
         <Fragment>
           <Circle
@@ -114,7 +114,7 @@ class MapScreen extends Component {
             coordinate={{
               ...coord,
             }}
-            description={this.props.storeSettings.searchLocalization.value}
+            description={this.props.storeSettings.searchlocation.value}
           />
         </Fragment>
       );
@@ -163,7 +163,7 @@ class MapScreen extends Component {
 
     if (this.state.firstChange) {
       // Récupère les coordonnées
-      const userLocalization = {
+      const userlocation = {
         value: "Géolocalisation",
         coord: {
           lat: userCoordinate.nativeEvent.coordinate.latitude,
@@ -180,9 +180,9 @@ class MapScreen extends Component {
       }
 
       // Puis les envoies au reducer pour mise à jour de la région
-      this.props.setCoord(userLocalization, "LOCALISATION");
+      this.props.setCoord(userlocation, "location");
 
-      // On set le state pour avertir que nous avons récupéré les données de la 1ère géolocalisation de l'utilisateur
+      // On set le state pour avertir que nous avons récupéré les données de la 1ère Géolocalisation de l'utilisateur
       this.setState({ firstChange: false });
     } else {
       this.calculDistance(userCoordinate, coord);
@@ -222,11 +222,11 @@ class MapScreen extends Component {
     // Récupère les coordonnées de zoom pour les ajouter aux coordonnées
     const latAndLonDelta = {
       latitudeDelta:
-        this.props.storeSettings.searchLocalization.value === "Default"
+        this.props.storeSettings.searchlocation.value === "Default"
           ? 19.411919009812614
           : 0.037370910726444606,
       longitudeDelta:
-        this.props.storeSettings.searchLocalization.value === "Default"
+        this.props.storeSettings.searchlocation.value === "Default"
           ? 15.498672053217886
           : 0.029233060777187347,
     };
@@ -241,11 +241,11 @@ class MapScreen extends Component {
   render() {
     // Mets dans une constante les coordonnées pour éviter des répétitions
     const coord = {
-      latitude: this.props.storeSettings.searchLocalization
-        ? this.props.storeSettings.searchLocalization.coord.lat
+      latitude: this.props.storeSettings.searchlocation
+        ? this.props.storeSettings.searchlocation.coord.lat
         : DEFAULT_COORD.lat,
-      longitude: this.props.storeSettings.searchLocalization
-        ? this.props.storeSettings.searchLocalization.coord.lon
+      longitude: this.props.storeSettings.searchlocation
+        ? this.props.storeSettings.searchlocation.coord.lon
         : DEFAULT_COORD.lon,
     };
     return (
@@ -253,10 +253,10 @@ class MapScreen extends Component {
         <MapView
           ref={(mapView) => (this._mapView = mapView)}
           style={{ flex: 1 }}
-          showsUserLocation={this.props.storeSettings.geolocalisation}
+          showsUserLocation={this.props.storeSettings.geolocation}
           userLocationAnnotationTitle={"Moi"}
           userLocationUpdateInterval={30000}
-          followsUserLocation={this.props.storeSettings.geolocalisation}
+          followsUserLocation={this.props.storeSettings.geolocation}
           // Récupère les coordonnées de l'utilisateur 1 seule fois pour centrer la carte sur son emplacement
           onUserLocationChange={(userCoordinate) =>
             this.userLocationChange(userCoordinate, coord)
@@ -264,11 +264,11 @@ class MapScreen extends Component {
           region={{
             ...coord,
             latitudeDelta:
-              this.props.storeSettings.searchLocalization.value === "Default"
+              this.props.storeSettings.searchlocation.value === "Default"
                 ? 19.411919009812614
                 : 0.037370910726444606,
             longitudeDelta:
-              this.props.storeSettings.searchLocalization.value === "Default"
+              this.props.storeSettings.searchlocation.value === "Default"
                 ? 15.498672053217886
                 : 0.029233060777187347,
           }}
