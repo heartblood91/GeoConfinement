@@ -50,10 +50,12 @@ class MapScreen extends Component {
       this.setState({ firstChange: this.props.storeSettings.geolocalisation });
     }
 
-    //Si searchLocalization name change dans le props mais pas dans le state:
+    //Si searchLocalization value change dans les props mais pas dans le state (sauf pour Default + Géolocalisation):
     if (
       this.props.storeSettings.searchLocalization.value !==
-      prevProps.storeSettings.searchLocalization.value
+        prevProps.storeSettings.searchLocalization.value &&
+      this.props.storeSettings.searchLocalization.value !== "Default" &&
+      this.props.storeSettings.searchLocalization.value !== "Géolocalisation"
     ) {
       this.setState({
         search: this.props.storeSettings.searchLocalization.value,
@@ -162,7 +164,7 @@ class MapScreen extends Component {
     if (this.state.firstChange) {
       // Récupère les coordonnées
       const userLocalization = {
-        name: "Géolocalisation",
+        value: "Géolocalisation",
         coord: {
           lat: userCoordinate.nativeEvent.coordinate.latitude,
           lon: userCoordinate.nativeEvent.coordinate.longitude,

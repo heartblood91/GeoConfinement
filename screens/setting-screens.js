@@ -8,7 +8,7 @@ import {
   Keyboard,
 } from "react-native";
 import { Icon } from "react-native-elements";
-import { handleChangeSettings } from "../actions";
+import { handleChangeSettings, syncroTempToSettings } from "../actions";
 import { connect } from "react-redux";
 import {
   widthPercentageToDP as wp,
@@ -32,10 +32,11 @@ class SettingScreen extends Component {
     );
   }
 
-  // Enlève le listener lors du démontage
+  // Enlève le listener lors du démontage + synchronise les paramètres entre les 2 reducers (TempSetting & Setting)
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
+    this.syncSettingReducer();
   }
 
   // Permet de save dans le state la présence / absence du clavier
@@ -44,7 +45,7 @@ class SettingScreen extends Component {
   };
 
   renderTextDescription = () => {
-    const isPress = Object.assign({}, this.props.storeSettings.isPress);
+    const isPress = Object.assign({}, this.props.storeTempSettings.isPress);
 
     switch (true) {
       case isPress.geolocalisation:
@@ -71,6 +72,39 @@ class SettingScreen extends Component {
       default:
         return "Cliquez sur un des paramètres pour avoir plus d'informations";
     }
+  };
+
+  syncSettingReducer = () => {
+    //Récupére les informations provenant du reducer temporaire des settings
+    // Puis on fait un nettoyage pour s'adapter au reducer classique
+    const newAddressObject = Object.assign(
+      {},
+      this.props.storeTempSettings.address
+    );
+    delete newAddressObject.text;
+    let tempSetting = {
+      address: { ...newAddressObject },
+      geolocalisation: this.props.storeTempSettings.geolocalisation.value,
+      nightMode: this.props.storeTempSettings.nightMode.value,
+      notification: this.props.storeTempSettings.notification.value,
+      radius: this.props.storeTempSettings.radius.value,
+      visualWarning: this.props.storeTempSettings.visualWarning.value,
+      timer: this.props.storeTempSettings.timer.value,
+    };
+
+    // Si une adresse a été paramétré alors on enregistre les données dans searchLocalization (sauf si similaire )
+    if (
+      this.props.storeTempSettings.address.value !== "" &&
+      this.props.storeSettings.searchLocalization.value !==
+        this.props.storeTempSettings.address.value
+    ) {
+      tempSetting = Object.assign(tempSetting, {
+        searchLocalization: { ...newAddressObject },
+      });
+    }
+
+    //Envoie au réducer les nouveaux paramètres du reducer temporaire pour les synchronisés
+    this.props.syncroTempToSettings(tempSetting);
   };
 
   render() {
@@ -155,11 +189,12 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (store) => {
-  return { storeSettings: store.tempSetting };
+  return { storeTempSettings: store.tempSetting, storeSettings: store.setting };
 };
 
 const mapDispatchToProps = {
   handleChangeSettings,
+  syncroTempToSettings,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingScreen);

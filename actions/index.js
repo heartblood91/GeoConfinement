@@ -3,6 +3,7 @@ import {
   SET_LOCALISATION,
   SET_ADDRESS,
   SET_IS_PRESS,
+  SYNCHRO_SETTING_TEMP,
 } from "./action-types";
 
 export const setCoord = (geocode, actionTypeBrute) => {
@@ -19,5 +20,11 @@ export const handleChangeSettings = (name, type, inputValue) => {
 
   return function (dispatch) {
     dispatch({ type: actionType, payload: { name, type, inputValue } });
+  };
+};
+
+export const syncroTempToSettings = (tempSetting) => {
+  return function (dispatch) {
+    dispatch({ type: SYNCHRO_SETTING_TEMP, payload: { ...tempSetting } });
   };
 };
