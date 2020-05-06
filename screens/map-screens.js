@@ -218,6 +218,26 @@ class MapScreen extends Component {
     }
   };
 
+  refocus = (coord) => {
+    // Récupère les coordonnées de zoom pour les ajouter aux coordonnées
+    const latAndLonDelta = {
+      latitudeDelta:
+        this.props.storeSettings.searchLocalization.value === "Default"
+          ? 19.411919009812614
+          : 0.037370910726444606,
+      longitudeDelta:
+        this.props.storeSettings.searchLocalization.value === "Default"
+          ? 15.498672053217886
+          : 0.029233060777187347,
+    };
+
+    // Merge les coordonnées de zoom avec les coordonnées
+    const newCoord = Object.assign({}, coord, latAndLonDelta);
+
+    // Permet de rendre avec une animation aux coordonées
+    this._mapView.animateToRegion(newCoord, 2000);
+  };
+
   render() {
     // Mets dans une constante les coordonnées pour éviter des répétitions
     const coord = {
@@ -231,6 +251,7 @@ class MapScreen extends Component {
     return (
       <View style={styles.container}>
         <MapView
+          ref={(mapView) => (this._mapView = mapView)}
           style={{ flex: 1 }}
           showsUserLocation={this.props.storeSettings.geolocalisation}
           userLocationAnnotationTitle={"Moi"}
@@ -254,6 +275,25 @@ class MapScreen extends Component {
         >
           {this.renderCircle(coord)}
         </MapView>
+
+        {/* Icône permettrant de recentrer la carte aux coordonnées (équivalent à celle de maps) */}
+        <Icon
+          raised
+          name="my-location"
+          type="material"
+          color="#fff"
+          reverseColor={APP_COLORS.blueColor}
+          reverse
+          size={Math.round(wp("5%"))}
+          containerStyle={{
+            position: "absolute",
+            bottom: hp("1%"),
+            left: wp("85%"),
+          }}
+          onPress={() => this.refocus(coord)}
+        />
+
+        {/* Icône permettrant d'accéder aux paramètres de l'application */}
         <Icon
           raised
           name="settings"
