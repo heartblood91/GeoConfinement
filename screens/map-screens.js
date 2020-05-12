@@ -16,8 +16,10 @@ import { APP_COLORS } from "../styles/color";
 
 // Coordonnées par défaut du centre de Paris
 const DEFAULT_COORD = {
-  lat: 47.384714655010384,
-  lon: 2.449696697294711,
+  latitude: 47.384714655010384,
+  longitude: 2.449696697294711,
+  latitudeDelta: 19.411919009812614,
+  longitudeDelta: 15.498672053217886,
 };
 
 class MapScreen extends Component {
@@ -59,6 +61,19 @@ class MapScreen extends Component {
     ) {
       this.setState({
         search: this.props.storeSettings.searchlocation.value,
+      });
+    }
+
+    // S'il y a un changement dans les coordonnées alors je force une MAJ de la région avec une animation
+    if (
+      this.props.storeSettings.searchlocation.coord.lat !==
+        prevProps.storeSettings.searchlocation.coord.lat ||
+      this.props.storeSettings.searchlocation.coord.lon !==
+        prevProps.storeSettings.searchlocation.coord.lon
+    ) {
+      this.refocus({
+        latitude: this.props.storeSettings.searchlocation.coord.lat,
+        longitude: this.props.storeSettings.searchlocation.coord.lon,
       });
     }
   };
@@ -243,11 +258,12 @@ class MapScreen extends Component {
     const coord = {
       latitude: this.props.storeSettings.searchlocation
         ? this.props.storeSettings.searchlocation.coord.lat
-        : DEFAULT_COORD.lat,
+        : DEFAULT_COORD.latitude,
       longitude: this.props.storeSettings.searchlocation
         ? this.props.storeSettings.searchlocation.coord.lon
-        : DEFAULT_COORD.lon,
+        : DEFAULT_COORD.longitude,
     };
+
     return (
       <View style={styles.container}>
         <MapView
@@ -261,16 +277,8 @@ class MapScreen extends Component {
           onUserLocationChange={(userCoordinate) =>
             this.userLocationChange(userCoordinate, coord)
           }
-          region={{
-            ...coord,
-            latitudeDelta:
-              this.props.storeSettings.searchlocation.value === "Default"
-                ? 19.411919009812614
-                : 0.037370910726444606,
-            longitudeDelta:
-              this.props.storeSettings.searchlocation.value === "Default"
-                ? 15.498672053217886
-                : 0.029233060777187347,
+          initialRegion={{
+            ...DEFAULT_COORD,
           }}
         >
           {this.renderCircle(coord)}
