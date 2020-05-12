@@ -21,7 +21,7 @@ const initializeState = {
       lon: 0,
     },
   },
-  radius: 1000,
+  radius: 100000,
 };
 
 export default function (state = initializeState, action) {

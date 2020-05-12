@@ -67,7 +67,7 @@ class SettingScreen extends Component {
         return "Permet d'enregistrer votre adresse. Cela vous évitera de la retaper à chaque fois.\nEntrez votre adresse puis cliquez sur la loupe";
 
       case isPress.radius:
-        return "Permet de modifier la taille du périmètre, exprimée en mètre.\nPar défaut, elle est fixée à 1000m";
+        return "Permet de modifier la taille du périmètre.\nVous pouvez aussi changer l'échelle de distance (mètre VS kilomètre).\nPar défaut, la distance est fixée à 100km";
 
       default:
         return "Cliquez sur un des paramètres pour avoir plus d'informations";
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   },
   textReturn: {
     fontSize: Math.round(wp("7%")),
-    color: APP_COLORS.blueLightcolor,
+    color: APP_COLORS.blueColor,
   },
 });
 
