@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Switch } from "react-native";
 import { Input, Icon } from "react-native-elements";
 import { handleChangeSettings } from "../actions";
 import { connect } from "react-redux";
@@ -12,18 +12,50 @@ import { setCoord } from "../actions";
 import { APP_COLORS } from "../styles/color";
 
 class SettingInput extends Component {
-  state = { inputValue: "", error: "", submitLocation: false };
-
+  state = {
+    inputValue: "",
+    error: "",
+    submitLocation: false,
+    scaleRaddius: false,
+  };
   componentDidMount = () => {
     // Init le state avec une adresse si et seulement si elle existe dans le reducer
     if (this.props.input.value !== "" && this.props.nameInput === "address") {
       this.setState({ inputValue: this.props.input.value });
     }
+
+    //Verifie le nombre de chiffre inscrit dans le raddius. Si > 4 alors, l'échelle est en km, sinon, elle est est en m
+    if (
+      this.props.input.value.toString().length > 4 &&
+      this.props.nameInput === "radius"
+    ) {
+      this.setState({ scaleRaddius: true });
+    } else if (
+      this.props.input.value.toString().length <= 4 &&
+      this.props.nameInput === "radius"
+    ) {
+      this.setState({ scaleRaddius: false });
+    }
   };
 
-  // Mets à jour le texte dans la search bar
-  updateInput = (inputValue) => {
-    this.setState({ inputValue });
+  componentDidUpdate = (prevState) => {
+    // Je vérifie que la valeur inscrite dans radius est de 4 digits max (ou 7 pour les kms)
+    // Si MAJ du switch dans l'input radius
+    if (
+      this.state.scaleRaddius !== prevState.scaleRaddius &&
+      this.props.nameInput === "radius"
+    ) {
+      // Je récupère la valeur du radius + je compte le nombre de chiffres + et le max de chiffres possibles (4 pour m - 7 pour km)
+      let { value } = this.props.input;
+      const digits = value.toString().length;
+      const maxDigits = this.state.scaleRaddius ? 7 : 4;
+
+      // Si la quantité de chiffres est plus importantes que la taille max, alors je resize la valeur
+      if (digits > maxDigits) {
+        value = parseInt(value.toString().substring(0, maxDigits));
+        this.props.handleChangeSettings("radius", "input", value);
+      }
+    }
   };
 
   submitSearch = () => {
@@ -83,21 +115,48 @@ class SettingInput extends Component {
   // Render radius
   renderInputRow = () => {
     return (
-      <Input
-        inputContainerStyle={styles.inputPositionRow}
-        placeholderTextColor={APP_COLORS.grayColor}
-        maxLength={6}
-        placeholder={"Distance en m"}
-        onChangeText={(inputValue) =>
-          this.props.handleChangeSettings(
-            this.props.nameInput,
-            "input",
-            inputValue
-          )
-        }
-        value={this.props.input.value.toString()}
-        keyboardType={"number-pad"}
-      />
+      <View style={styles.containerInputRadius}>
+        <Input
+          inputContainerStyle={{ height: hp("3%") }}
+          containerStyle={styles.inputPositionRow}
+          placeholderTextColor={APP_COLORS.grayColor}
+          maxLength={4}
+          placeholder={"Distance"}
+          onChangeText={(inputValue) =>
+            this.props.handleChangeSettings(
+              this.props.nameInput,
+              "input",
+              this.state.scaleRaddius ? inputValue * 1000 : inputValue
+            )
+          }
+          value={
+            this.state.scaleRaddius
+              ? (this.props.input.value / 1000).toString()
+              : this.props.input.value.toString()
+          }
+          keyboardType={"number-pad"}
+        />
+        <View style={styles.containerInputSwitchScale}>
+          <Text style={styles.textBody}>m</Text>
+          <Switch
+            trackColor={{
+              false: APP_COLORS.graySwitch,
+              true: APP_COLORS.graySwitch,
+            }}
+            ios_backgroundColor={APP_COLORS.graySwitch}
+            thumbColor={
+              this.state.scaleRaddius
+                ? APP_COLORS.blueColor
+                : APP_COLORS.blueColor
+            }
+            onChange={() =>
+              this.setState({ scaleRaddius: !this.state.scaleRaddius })
+            }
+            value={this.state.scaleRaddius}
+          />
+          <Text style={styles.textBody}>km</Text>
+        </View>
+      </View>
     );
   };
 
@@ -108,7 +167,7 @@ class SettingInput extends Component {
         inputContainerStyle={styles.inputPositionColumns}
         placeholderTextColor={APP_COLORS.grayColor}
         placeholder={"Entrez votre adresse ici"}
-        onChangeText={this.updateInput}
+        onChangeText={(inputValue) => this.setState({ inputValue })}
         onSubmitEditing={this.submitSearch}
         value={this.state.inputValue}
         autoCompleteType={"street-address"}
@@ -164,11 +223,25 @@ const styles = StyleSheet.create({
     height: hp("6%"),
   },
   textBodyRows: {
-    width: wp("68%"),
+    //width: wp("15%"),
   },
   inputPositionRow: {
     maxWidth: wp("14%"),
     maxHeight: hp("4%"),
+  },
+
+  // Render Style Input Radius
+  containerInputRadius: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "flex-end",
+  },
+  containerInputSwitchScale: {
+    flexGrow: 1,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    paddingHorizontal: 5,
   },
 
   // Render Style Column
