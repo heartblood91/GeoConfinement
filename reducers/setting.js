@@ -1,4 +1,4 @@
-import { SET_location, SYNCHRO_SETTING_TEMP } from "../actions/action-types";
+import { SET_LOCATION, SYNCHRO_SETTING_TEMP } from "../actions/action-types";
 
 // initialise le store
 const initializeState = {
@@ -26,7 +26,7 @@ const initializeState = {
 
 export default function (state = initializeState, action) {
   switch (action.type) {
-    case SET_location:
+    case SET_LOCATION:
       return {
         ...state,
         searchlocation: action.payload,
