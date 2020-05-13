@@ -64,17 +64,15 @@ class MapScreen extends Component {
       });
     }
 
-    // S'il y a un changement dans les coordonnées alors je force une MAJ de la région avec une animation
+    // S'il y a un changement dans les coordonnées alors je force une MAJ de la région avec une animation ou un changement dans le rayon
     if (
       this.props.storeSettings.searchlocation.coord.lat !==
         prevProps.storeSettings.searchlocation.coord.lat ||
       this.props.storeSettings.searchlocation.coord.lon !==
-        prevProps.storeSettings.searchlocation.coord.lon
+        prevProps.storeSettings.searchlocation.coord.lon ||
+      this.props.storeSettings.radius !== prevProps.storeSettings.radius
     ) {
-      this.refocus({
-        latitude: this.props.storeSettings.searchlocation.coord.lat,
-        longitude: this.props.storeSettings.searchlocation.coord.lon,
-      });
+      this.refocus();
     }
   };
 
@@ -233,24 +231,47 @@ class MapScreen extends Component {
     }
   };
 
-  refocus = (coord) => {
+  refocus = () => {
+    // Calcul le taux de zoom / delta de la map
+    const delta = this.renderZoomRadius();
+
+    // Récupère les coordonnées des props
+    const latAndLon = {
+      latitude: this.props.storeSettings.searchlocation.coord.lat,
+      longitude: this.props.storeSettings.searchlocation.coord.lon,
+    };
+
     // Récupère les coordonnées de zoom pour les ajouter aux coordonnées
     const latAndLonDelta = {
       latitudeDelta:
         this.props.storeSettings.searchlocation.value === "Default"
           ? 19.411919009812614
-          : 0.037370910726444606,
+          : delta.latitudeDelta,
       longitudeDelta:
         this.props.storeSettings.searchlocation.value === "Default"
           ? 15.498672053217886
-          : 0.029233060777187347,
+          : delta.longitudeDelta,
     };
 
     // Merge les coordonnées de zoom avec les coordonnées
-    const newCoord = Object.assign({}, coord, latAndLonDelta);
+    const newCoord = Object.assign({}, latAndLon, latAndLonDelta);
 
     // Permet de rendre avec une animation aux coordonées
     this._mapView.animateToRegion(newCoord, 2000);
+  };
+
+  renderZoomRadius = () => {
+    // Je compare le rayon actuel avec un rayon de 1000m
+    const ratio = 1000 / this.props.storeSettings.radius;
+
+    //Je multiplie le ratio par les valeurs de latitudeDelta et de longitudeDelta correspondant à un rayon de 1000m
+    const delta = {
+      latitudeDelta: 0.037370910726444606 / ratio,
+      longitudeDelta: 0.029233060777187347 / ratio,
+    };
+
+    //Je retourne la valeur de delta
+    return delta;
   };
 
   render() {
