@@ -8,11 +8,16 @@ import {
 import { connect } from "react-redux";
 
 import { APP_COLORS } from "../styles/color";
+import { suscribeToPushNotifications } from "../services/notifications";
 
 const initialState = {
   hours: 1,
   minutes: 0,
   timerIsOn: false,
+  notificationIsSend: {
+    timer15: false,
+    timer0: false,
+  },
 };
 
 class ShowTimer extends Component {
@@ -55,6 +60,11 @@ class ShowTimer extends Component {
         // Je récupère les informations du state
         const { minutes } = this.state;
 
+        // Si les notifications sont autorisées, alors je préviens l'utilisateur que le compteur est soit à 15 soit à 0
+        this.props.notification &&
+          (minutes === 0 || minutes === 15) &&
+          this.senderNotification("timer" + minutes);
+
         if (minutes === 0) {
           this.stopTimer(false);
 
@@ -66,6 +76,17 @@ class ShowTimer extends Component {
         }
       }, 60000);
     }
+  };
+
+  // Envoie une notif (soit timer0 soit timer15)
+  senderNotification = (type) => {
+    suscribeToPushNotifications(type);
+    this.setState({
+      notificationIsSend: {
+        ...this.state.notificationIsSend,
+        [type]: true,
+      },
+    });
   };
 
   render() {

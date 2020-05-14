@@ -13,6 +13,7 @@ import { getDistance } from "geolib";
 
 import ShowTimer from "../components/timer";
 import { APP_COLORS } from "../styles/color";
+import { suscribeToPushNotifications } from "../services/notifications";
 
 // Coordonnées par défaut du centre de Paris
 const DEFAULT_COORD = {
@@ -29,6 +30,7 @@ class MapScreen extends Component {
     distance: 0,
     error: "",
     submitLocation: false,
+    notificationIsSend: false,
   };
 
   componentDidMount = () => {
@@ -219,6 +221,25 @@ class MapScreen extends Component {
     if (diffDistance >= 5) {
       this.setState({ distance });
     }
+
+    // Si les notifications sont autorisées :
+    //Si les notifications sont activées alors j'envoie une notification si la personne sort du périmètre
+    // Si la personne est sortie du périmètre puis revenue dans ce périmètre alors je reset la notif warning pour une prochaine sortie
+    if (
+      distance < this.props.storeSettings.radius &&
+      !this.state.notificationIsSend
+    ) {
+      // Envoie la notification
+      suscribeToPushNotifications("warning");
+
+      // Informe le state de l'envoie
+      this.setState({ notificationIsSend: true });
+    } else if (
+      distance > this.props.storeSettings.radius &&
+      this.state.notificationIsSend
+    ) {
+      this.setState({ notificationIsSend: false });
+    }
   };
 
   renderError = () => {
@@ -374,7 +395,9 @@ class MapScreen extends Component {
             color: APP_COLORS.blackColor,
           }}
         />
-        {this.props.storeSettings.timer && <ShowTimer />}
+        {this.props.storeSettings.timer && (
+          <ShowTimer notification={this.props.storeSettings.notification} />
+        )}
       </View>
     );
   }
