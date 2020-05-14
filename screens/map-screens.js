@@ -222,11 +222,10 @@ class MapScreen extends Component {
       this.setState({ distance });
     }
 
-    // Si les notifications sont autorisées :
-    //Si les notifications sont activées alors j'envoie une notification si la personne sort du périmètre
+    // Si les notifications sont activées alors j'envoie une notification si la personne sort du périmètre
     // Si la personne est sortie du périmètre puis revenue dans ce périmètre alors je reset la notif warning pour une prochaine sortie
     if (
-      distance < this.props.storeSettings.radius &&
+      distance > this.props.storeSettings.radius &&
       !this.state.notificationIsSend
     ) {
       // Envoie la notification
@@ -235,7 +234,7 @@ class MapScreen extends Component {
       // Informe le state de l'envoie
       this.setState({ notificationIsSend: true });
     } else if (
-      distance > this.props.storeSettings.radius &&
+      distance < this.props.storeSettings.radius &&
       this.state.notificationIsSend
     ) {
       this.setState({ notificationIsSend: false });
