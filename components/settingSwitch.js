@@ -2,14 +2,48 @@ import React, { Component } from "react";
 import { StyleSheet, View, Text, Switch } from "react-native";
 import { handleChangeSettings } from "../actions";
 import { connect } from "react-redux";
+import * as Permissions from "expo-permissions";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-
 import { APP_COLORS } from "../styles/color";
 
 class SettingSwitch extends Component {
+  // Verifie si l'utilisateur a autorisé l'appli (géoloc ou notification) sinon l'appli demande l'autorisation
+  // Si autorisation alors le bouton switch, sinon il ne bouge pas
+  verifyPermission = () => {
+    const type =
+      this.props.nameSwitch === "geolocation" ? "LOCATION" : "NOTIFICATIONS";
+
+    Permissions.getAsync(Permissions[type]).then((existingPermission) => {
+      if (existingPermission.status !== "granted") {
+        Permissions.askAsync(Permissions[type]).then(() => {
+          permission.status === "granted" &&
+            this.props.handleChangeSettings(this.props.nameSwitch, "value");
+        });
+      } else {
+        this.props.handleChangeSettings(this.props.nameSwitch, "value");
+      }
+    });
+  };
+
+  // Si besoin de checker les permissions de l'appli alors on utilisera la fonction verifyPermission
+  // (dans le cadre d'activation d'un des paramètres suivants : NOTIFICATIONS ou LOCATION)
+  // Sinon il s'agit d'un paramètre standard sans permission particulière, pas besoin de passer sur cette étape
+  // (circuit court pour la désactivation d'une option avec permission)
+  handleChangeValue = () => {
+    if (
+      (this.props.nameSwitch === "geolocation" ||
+        this.props.nameSwitch === "notification") &&
+      !this.props.switch.value
+    ) {
+      this.verifyPermission();
+    } else {
+      this.props.handleChangeSettings(this.props.nameSwitch, "value");
+    }
+  };
+
   render() {
     return (
       <View
@@ -40,9 +74,7 @@ class SettingSwitch extends Component {
               ? APP_COLORS.greenColor
               : APP_COLORS.redColor
           }
-          onChange={() =>
-            this.props.handleChangeSettings(this.props.nameSwitch, "value")
-          }
+          onChange={() => this.handleChangeValue()}
           value={this.props.switch.value}
         />
       </View>
