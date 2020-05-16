@@ -49,10 +49,10 @@ class SettingScreen extends Component {
 
     switch (true) {
       case isPress.geolocation:
-        return "Permet de vous géolocalisez sur la carte. Ce paramètre est modifiable uniquement si vous avez autorisé l'application à vous suivre.";
+        return "Permet de vous géolocaliser sur la carte. Ce paramètre est modifiable uniquement si vous avez autorisé l'application à vous suivre.";
 
       case isPress.notification:
-        return "L'application vous envoie une notification si vous dépassez le périmètre autorisé.\nNécessite la géolocalisation.";
+        return "Permet à l'application de vous envoyer des notifications.\nVous pouvez en recevoir en activant l'option 'compte à rebours' et / ou l'option 'couleur zone dynamique'";
 
       case isPress.visualWarning:
         return "Si vous êtes dans le périmètre autorisé, le cercle est vert. Si vous dépassez les bornes des limites, comme Maurice, le cercle est rouge. Par défaut, il est tout le temps bleu.\nNécessite la géolocalisation.";

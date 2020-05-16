@@ -10,6 +10,7 @@ export const APP_COLORS = {
   blueLightcolor: "rgba(0, 123, 255, 0.5)",
   redLightcolor: "rgba(220, 53, 69, 0.6)",
   greenLightcolor: "rgba(40, 167, 69, 0.6)",
+  grayLightColor: "#d6d9db",
 
   // Circle
   blueCircle: "rgba(204,238,255,0.3)",

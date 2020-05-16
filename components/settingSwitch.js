@@ -41,18 +41,37 @@ class SettingSwitch extends Component {
       this.verifyPermission();
     } else {
       this.props.handleChangeSettings(this.props.nameSwitch, "value");
+
+      // + Si l'option géolocalisation passe sur 'off' & 'couleur zone dynamique' est sur 'on' alors on désactive l'option 'couleur zone dynamique'
+      this.props.nameSwitch === "geolocation" &&
+        this.props.storeTempSetting.geolocation.value &&
+        this.props.storeTempSetting.visualWarning.value &&
+        this.props.handleChangeSettings("visualWarning", "value");
     }
+  };
+
+  renderStyle = () => {
+    const style = [styles.containerBody];
+
+    // Si le bouton est pressée alors on ajoute un style supplémentaire
+    this.props.isPress && style.push(styles.selectionSetting);
+
+    // Verifie si 'visualWarning' est désactivé
+    const visualWarningIsDisabled =
+      this.props.nameSwitch === "visualWarning" &&
+      !this.props.storeTempSetting.geolocation.value
+        ? true
+        : false;
+
+    // Si le bouton est désactivée alors on ajoute un style supplémentaire
+    visualWarningIsDisabled && style.push(styles.disableInput);
+
+    return style;
   };
 
   render() {
     return (
-      <View
-        style={
-          this.props.isPress
-            ? [styles.containerBody, styles.selectionSetting]
-            : styles.containerBody
-        }
-      >
+      <View style={this.renderStyle()}>
         <Text
           style={styles.textBody}
           onPress={() =>
@@ -76,6 +95,13 @@ class SettingSwitch extends Component {
           }
           onChange={() => this.handleChangeValue()}
           value={this.props.switch.value}
+          // Désactive le switch s'il s'agit de l'input 'couleur zone dynamique' et que la géolocalisation est désactivée
+          disabled={
+            this.props.nameSwitch === "visualWarning" &&
+            !this.props.storeTempSetting.geolocation.value
+              ? true
+              : false
+          }
         />
       </View>
     );
@@ -120,6 +146,10 @@ const styles = StyleSheet.create({
   switchPosition: {
     transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
   },
+
+  disableInput: {
+    backgroundColor: APP_COLORS.grayLightColor,
+  },
 });
 
 const mapStateToProps = (store, ownProps) => {
@@ -127,6 +157,7 @@ const mapStateToProps = (store, ownProps) => {
   return {
     switch: store.tempSetting[ownProps.nameSwitch],
     isPress: store.tempSetting.isPress[ownProps.nameSwitch],
+    storeTempSetting: store.tempSetting,
   };
 };
 
