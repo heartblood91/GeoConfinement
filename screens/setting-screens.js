@@ -105,13 +105,39 @@ class SettingScreen extends Component {
         draftTempSetting.radius = this.props.storeTempSettings.radius.value;
         delete draftTempSetting.searchlocation;
 
-        // Si une adresse a été paramétré alors on enregistre les données dans searchlocation (sauf si similaire )
+        // MAJ de searchlocation dans 6 cas
+        // oldSearchLocation    newSearchLocation   Resultats
+        // default	            addresse	          addresse
+        // addresse	            default	            default
+        // location	            addresse	          addresse
+        // addresse	            location	          location
+        // default	            location	          location
+        // addresse	            NewAddresse	        NewAddresse
+
+        let testMaj = false;
+        const oldSearchLocation = this.props.storeSettings.searchlocation.value;
+        const newSearchLocation = this.props.storeTempSettings.address.value;
 
         if (
-          //this.props.storeTempSettings.address.value !== "" &&
-          this.props.storeSettings.searchlocation.value !==
-          this.props.storeTempSettings.address.value
+          oldSearchLocation === "Default" &&
+          newSearchLocation !== "Default"
         ) {
+          testMaj = true;
+        } else if (
+          oldSearchLocation !== "Géolocalisation" &&
+          oldSearchLocation !== "Default" &&
+          oldSearchLocation !== newSearchLocation
+        ) {
+          testMaj = true;
+        } else if (
+          oldSearchLocation === "Géolocalisation" &&
+          newSearchLocation !== "Géolocalisation" &&
+          newSearchLocation !== "Default"
+        ) {
+          testMaj = true;
+        }
+
+        if (testMaj) {
           draftTempSetting.searchlocation = {
             ...this.props.storeTempSettings.address,
           };
