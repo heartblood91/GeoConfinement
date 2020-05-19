@@ -47,6 +47,21 @@ export const initSettingWithStorage = (storageSetting, reducerTempSetting) => {
     }
   );
 
+  //Ajout de searchLocation ssi adresse.value est une saisie de l'utilisateur
+  if (
+    storageSetting.address.value !== "Géolocalisation" &&
+    storageSetting.address.value !== "Default"
+  ) {
+    Object.assign(storageSetting, {
+      searchlocation: {
+        value: storageSetting.address.value,
+        coord: {
+          ...storageSetting.address.coord,
+        },
+      },
+    });
+  }
+
   return function (dispatch) {
     dispatch({ type: SYNCHRO_SETTING, payload: { ...storageSetting } });
     dispatch({ type: SYNCHRO_SETTING_INIT, payload: { ...newStorageSetting } });
