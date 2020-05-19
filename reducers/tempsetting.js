@@ -2,6 +2,7 @@ import {
   SET_SETTING,
   SET_IS_PRESS,
   SET_ADDRESS,
+  SYNCHRO_SETTING_INIT,
 } from "../actions/action-types";
 
 //Initiale Store of isPress
@@ -87,6 +88,13 @@ export default function (state = initializeState, action) {
       return {
         ...state,
         address: action.payload,
+      };
+
+    // Synchronise les settings avec les informations récupérer dans le storage
+    case SYNCHRO_SETTING_INIT:
+      return {
+        ...state,
+        ...action.payload,
       };
 
     default:

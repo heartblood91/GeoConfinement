@@ -1,9 +1,8 @@
 import React, { Component, Fragment } from "react";
 import MapView, { Circle, Marker } from "react-native-maps";
 import { Icon, SearchBar } from "react-native-elements";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, AsyncStorage } from "react-native";
 import LocationIQ from "react-native-locationiq";
-import { setCoord } from "../actions";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -11,6 +10,7 @@ import {
 import { connect } from "react-redux";
 import { getDistance } from "geolib";
 
+import { setCoord, initSettingWithStorage } from "../actions";
 import ShowTimer from "../components/timer";
 import { APP_COLORS } from "../styles/color";
 import { suscribeToPushNotifications } from "../services/notifications";
@@ -43,6 +43,9 @@ class MapScreen extends Component {
         search: this.props.storeSettings.searchlocation.value,
       });
     }
+
+    // Récupération des settings de l'utilisateur dans le storage
+    this.getSettings();
   };
 
   componentDidUpdate = (prevProps) => {
@@ -75,6 +78,26 @@ class MapScreen extends Component {
       this.props.storeSettings.radius !== prevProps.storeSettings.radius
     ) {
       this.refocus();
+    }
+  };
+
+  // Récupère l'ensemble des paramètres de l'utilisateur
+  getSettings = async () => {
+    // Vérifie l'existence de data dans le storage
+    try {
+      const jsonTempSettings = await AsyncStorage.getItem(
+        "@geoconfinement_Settings"
+      );
+
+      // Si je trouve de la data alors je set le reducer
+      if (jsonTempSettings !== null) {
+        this.props.initSettingWithStorage(
+          JSON.parse(jsonTempSettings),
+          this.props.storeTempSetting
+        );
+      }
+    } catch (error) {
+      console.warn("error getSettings: ", error);
     }
   };
 
@@ -421,11 +444,13 @@ const styles = StyleSheet.create({
 const mapStateToProps = (store) => {
   return {
     storeSettings: store.setting,
+    storeTempSetting: store.tempSetting,
   };
 };
 
 const mapDispatchToProps = {
   setCoord,
+  initSettingWithStorage,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapScreen);

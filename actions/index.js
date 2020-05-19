@@ -1,9 +1,11 @@
+import produce from "immer";
 import {
   SET_SETTING,
   SET_LOCATION,
   SET_ADDRESS,
   SET_IS_PRESS,
-  SYNCHRO_SETTING_TEMP,
+  SYNCHRO_SETTING,
+  SYNCHRO_SETTING_INIT,
 } from "./action-types";
 
 export const setCoord = (geocode, actionTypeBrute) => {
@@ -25,6 +27,28 @@ export const handleChangeSettings = (name, type, inputValue) => {
 
 export const syncroTempToSettings = (tempSetting) => {
   return function (dispatch) {
-    dispatch({ type: SYNCHRO_SETTING_TEMP, payload: { ...tempSetting } });
+    dispatch({ type: SYNCHRO_SETTING, payload: { ...tempSetting } });
+  };
+};
+
+export const initSettingWithStorage = (storageSetting, reducerTempSetting) => {
+  // Créé un nouveau storageSetting adapté au tempSetting
+  const newStorageSetting = produce(
+    reducerTempSetting,
+    (draftStorageSetting) => {
+      draftStorageSetting.timer.value = storageSetting.timer;
+      draftStorageSetting.visualWarning.value = storageSetting.visualWarning;
+      draftStorageSetting.geolocation.value = storageSetting.geolocation;
+      draftStorageSetting.nightMode.value = storageSetting.nightMode;
+      draftStorageSetting.notification.value = storageSetting.notification;
+      draftStorageSetting.radius.value = storageSetting.radius;
+      draftStorageSetting.address.coord = storageSetting.address.coord;
+      draftStorageSetting.address.value = storageSetting.address.value;
+    }
+  );
+
+  return function (dispatch) {
+    dispatch({ type: SYNCHRO_SETTING, payload: { ...storageSetting } });
+    dispatch({ type: SYNCHRO_SETTING_INIT, payload: { ...newStorageSetting } });
   };
 };

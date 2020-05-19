@@ -16,6 +16,7 @@
     "expo-permissions": "^8.1.0",
     "expo-updates": "~0.1.0",
     "geolib": "^3.2.1",
+    "immer": "^6.0.5",
     "react": "~16.9.0",
     "react-devtools": "^3.6.3",
     "react-dom": "~16.9.0",

@@ -6,15 +6,17 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  AsyncStorage,
 } from "react-native";
 import { Icon } from "react-native-elements";
-import { handleChangeSettings, syncroTempToSettings } from "../actions";
 import { connect } from "react-redux";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import produce from "immer";
 
+import { handleChangeSettings, syncroTempToSettings } from "../actions";
 import SettingSwitch from "../components/settingSwitch";
 import SettingInput from "../components/settingInput";
 import { APP_COLORS } from "../styles/color";
@@ -32,10 +34,23 @@ class SettingScreen extends Component {
     );
   }
 
+  saveSettings = async (settings) => {
+    // j'essaye de sauvegarder les paramètres dans le storage
+    try {
+      // Je transforme les paramètres provenant du reducer en objet json pour les stocker dans le storage
+      const jsonTempSettings = JSON.stringify(settings);
+      await AsyncStorage.setItem("@geoconfinement_Settings", jsonTempSettings);
+    } catch (error) {
+      console.warn("error saveSettings: ", error);
+    }
+  };
+
   // Enlève le listener lors du démontage + synchronise les paramètres entre les 2 reducers (TempSetting & Setting)
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
+
+    // Synchro le reducer setting temporaire avec le reducer setting + Sauvegarde ces settings sur le téléphone
     this.syncSettingReducer();
   }
 
@@ -77,34 +92,36 @@ class SettingScreen extends Component {
   syncSettingReducer = () => {
     //Récupére les informations provenant du reducer temporaire des settings
     // Puis on fait un nettoyage pour s'adapter au reducer classique
-    const newAddressObject = Object.assign(
-      {},
-      this.props.storeTempSettings.address
-    );
-    delete newAddressObject.text;
-    let tempSetting = {
-      address: { ...newAddressObject },
-      geolocation: this.props.storeTempSettings.geolocation.value,
-      nightMode: this.props.storeTempSettings.nightMode.value,
-      notification: this.props.storeTempSettings.notification.value,
-      radius: this.props.storeTempSettings.radius.value,
-      visualWarning: this.props.storeTempSettings.visualWarning.value,
-      timer: this.props.storeTempSettings.timer.value,
-    };
+    const tempSetting = produce(
+      this.props.storeSettings,
+      (draftTempSetting) => {
+        draftTempSetting.notification = this.props.storeTempSettings.notification.value;
+        draftTempSetting.visualWarning = this.props.storeTempSettings.visualWarning.value;
+        draftTempSetting.timer = this.props.storeTempSettings.timer.value;
+        draftTempSetting.nightMode = this.props.storeTempSettings.nightMode.value;
+        draftTempSetting.geolocation = this.props.storeTempSettings.geolocation.value;
+        draftTempSetting.address = this.props.storeSettings.address;
+        delete draftTempSetting.address.text;
+        draftTempSetting.radius = this.props.storeTempSettings.radius.value;
 
-    // Si une adresse a été paramétré alors on enregistre les données dans searchlocation (sauf si similaire )
-    if (
-      this.props.storeTempSettings.address.value !== "" &&
-      this.props.storeSettings.searchlocation.value !==
-        this.props.storeTempSettings.address.value
-    ) {
-      tempSetting = Object.assign(tempSetting, {
-        searchlocation: { ...newAddressObject },
-      });
-    }
+        // Si une adresse a été paramétré alors on enregistre les données dans searchlocation (sauf si similaire )
+
+        if (
+          this.props.storeTempSettings.address.value !== "" &&
+          this.props.storeSettings.searchlocation.value !==
+            this.props.storeTempSettings.address.value
+        ) {
+          draftTempSetting.searchlocation = this.props.storeSettings.searchlocation;
+          delete draftTempSetting.searchlocation.text;
+        }
+      }
+    );
 
     //Envoie au réducer les nouveaux paramètres du reducer temporaire pour les synchronisés
     this.props.syncroTempToSettings(tempSetting);
+
+    //Sauvegarde ces settings sur le téléphone
+    this.saveSettings(tempSetting);
   };
 
   render() {
