@@ -224,10 +224,7 @@ class MapScreen extends Component {
       };
 
       // On lance un calcul de distance si les coord transmises sont différentes des coordonnées par défaut
-      if (
-        coord.latitude !== DEFAULT_COORD.lat &&
-        coord.longitude !== DEFAULT_COORD.lon
-      ) {
+      if (coord.lat !== DEFAULT_COORD.lat && coord.lon !== DEFAULT_COORD.lon) {
         this.calculDistance(userCoordinate, coord);
       }
 
@@ -263,7 +260,8 @@ class MapScreen extends Component {
     // Si la personne est sortie du périmètre puis revenue dans ce périmètre alors je reset la notif warning pour une prochaine sortie
     if (
       distance > this.props.storeSettings.radius &&
-      !this.state.notificationIsSend
+      !this.state.notificationIsSend &&
+      this.props.storeSettings.notification
     ) {
       // Envoie la notification
       suscribeToPushNotifications("warning");
