@@ -27,6 +27,7 @@ class MapScreen extends Component {
   state = {
     search: "",
     firstChange: true,
+    firstFocus: true,
     distance: 0,
     error: "",
     submitLocation: false,
@@ -307,12 +308,18 @@ class MapScreen extends Component {
           ? 15.498672053217886
           : delta.longitudeDelta,
     };
-
     // Merge les coordonnées de zoom avec les coordonnées
     const newCoord = Object.assign({}, latAndLon, latAndLonDelta);
 
     // Permet de rendre avec une animation aux coordonées
-    this._mapView.animateToRegion(newCoord, 2000);
+    // Lors du premier focus, il y a un délai de 2s avant de lancer l'animation (permet de résoudre un bug d'animation à l'ouverture de l'appli)
+    const timeoutForFirstFocus = this.state.firstFocus ? 2000 : 0;
+
+    setTimeout(() => {
+      this._mapView.animateToRegion(newCoord, 2000);
+    }, timeoutForFirstFocus);
+
+    this.setState({ firstFocus: false });
   };
 
   renderZoomRadius = () => {
