@@ -59,30 +59,35 @@ class SettingInput extends Component {
   };
 
   submitSearch = () => {
-    // Init le module avec l'API Key:
-    LocationIQ.init("***REMOVED***"); // masquer l'API KEY sur Github
+    if (this.state.inputValue !== "") {
+      // Init le module avec l'API Key:
+      LocationIQ.init("***REMOVED***"); // masquer l'API KEY sur Github
 
-    // Puis effectue la recherche
-    LocationIQ.search(this.state.inputValue)
-      .then((json) => {
-        // Récupère les coordonnées
-        const searchAddress = {
-          value: this.state.inputValue.trim(),
-          coord: {
-            lat: parseFloat(json[0].lat),
-            lon: parseFloat(json[0].lon),
-          },
-          text: "Adresse:",
-        };
+      // Puis effectue la recherche
+      LocationIQ.search(this.state.inputValue)
+        .then((json) => {
+          // Récupère les coordonnées
+          const searchAddress = {
+            value: this.state.inputValue.trim(),
+            coord: {
+              lat: parseFloat(json[0].lat),
+              lon: parseFloat(json[0].lon),
+            },
+            text: "Adresse:",
+          };
 
-        // Je préviens que le formulaire a été soumis SANS erreur
-        this.setState({ error: "", submitLocation: true });
+          // Je préviens que le formulaire a été soumis SANS erreur
+          this.setState({ error: "", submitLocation: true });
 
-        // Puis les envoies au reducer pour mise à jour
-        this.props.setCoord(searchAddress, "ADDRESS");
-      })
-      // Je préviens que le formulaire a été soumis AVEC erreur
-      .catch((error) => this.setState({ error, submitLocation: true }));
+          // Puis les envoies au reducer pour mise à jour
+          this.props.setCoord(searchAddress, "ADDRESS");
+        })
+        // Je préviens que le formulaire a été soumis AVEC erreur
+        .catch((error) => this.setState({ error, submitLocation: true }));
+    } else {
+      // Puis les envoies au reducer le reset
+      this.props.setCoord("", "ADDRESS");
+    }
   };
 
   renderError = () => {
@@ -169,7 +174,7 @@ class SettingInput extends Component {
         placeholder={"Entrez votre adresse ici"}
         onChangeText={(inputValue) => this.setState({ inputValue })}
         onSubmitEditing={this.submitSearch}
-        value={this.state.inputValue}
+        value={this.state.inputValue === "Default" ? "" : this.state.inputValue}
         autoCompleteType={"street-address"}
         dataDetectorTypes={"address"}
         textContentType={"addressCity"}

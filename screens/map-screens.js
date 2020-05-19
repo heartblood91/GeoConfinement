@@ -67,6 +67,15 @@ class MapScreen extends Component {
       this.setState({
         search: this.props.storeSettings.searchlocation.value,
       });
+    } else if (
+      this.props.storeSettings.searchlocation.value !==
+        prevProps.storeSettings.searchlocation.value &&
+      (this.props.storeSettings.searchlocation.value === "Default" ||
+        this.props.storeSettings.searchlocation.value === "Géolocalisation")
+    ) {
+      this.setState({
+        search: "",
+      });
     }
 
     // S'il y a un changement dans les coordonnées alors je force une MAJ de la région avec une animation ou un changement dans le rayon
@@ -107,28 +116,33 @@ class MapScreen extends Component {
   };
 
   submitSearch = () => {
-    // Init le module avec l'API Key:
-    LocationIQ.init("***REMOVED***"); // masquer l'API KEY sur Github
+    if (this.state.search !== "") {
+      // Init le module avec l'API Key:
+      LocationIQ.init("***REMOVED***"); // masquer l'API KEY sur Github
 
-    // Puis effectue la recherche
-    LocationIQ.search(this.state.search)
-      .then((json) => {
-        // Récupère les coordonnées
-        const searchlocation = {
-          value: this.state.search.trim(),
-          coord: {
-            lat: parseFloat(json[0].lat),
-            lon: parseFloat(json[0].lon),
-          },
-        };
+      // Puis effectue la recherche
+      LocationIQ.search(this.state.search)
+        .then((json) => {
+          // Récupère les coordonnées
+          const searchlocation = {
+            value: this.state.search.trim(),
+            coord: {
+              lat: parseFloat(json[0].lat),
+              lon: parseFloat(json[0].lon),
+            },
+          };
 
-        // Je préviens que le formulaire a été soumis SANS erreur
-        this.setState({ error: "", submitLocation: true });
+          // Je préviens que le formulaire a été soumis SANS erreur
+          this.setState({ error: "", submitLocation: true });
 
-        // Puis les envoies au reducer pour mise à jour
-        this.props.setCoord(searchlocation, "location");
-      })
-      .catch((error) => this.setState({ error, submitLocation: true }));
+          // Puis les envoies au reducer pour mise à jour
+          this.props.setCoord(searchlocation, "location");
+        })
+        .catch((error) => this.setState({ error, submitLocation: true }));
+    } else {
+      // Puis les envoies au reducer le reset
+      this.props.setCoord("", "location");
+    }
   };
 
   // Permet de créer un cercle sur la carte si une adresse a été entré

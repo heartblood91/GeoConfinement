@@ -15,10 +15,10 @@ const initializeState = {
   timer: false,
   nightMode: false,
   address: {
-    value: "",
+    value: "Default",
     coord: {
-      lat: 0,
-      lon: 0,
+      lat: 47.384714655010384,
+      lon: 2.449696697294711,
     },
   },
   radius: 100000,
@@ -27,9 +27,13 @@ const initializeState = {
 export default function (state = initializeState, action) {
   switch (action.type) {
     case SET_LOCATION:
+      const newPayload =
+        action.payload === ""
+          ? Object.assign({}, initializeState.searchlocation)
+          : Object.assign({}, action.payload);
       return {
         ...state,
-        searchlocation: action.payload,
+        searchlocation: newPayload,
       };
 
     case SYNCHRO_SETTING:

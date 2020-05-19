@@ -100,18 +100,21 @@ class SettingScreen extends Component {
         draftTempSetting.timer = this.props.storeTempSettings.timer.value;
         draftTempSetting.nightMode = this.props.storeTempSettings.nightMode.value;
         draftTempSetting.geolocation = this.props.storeTempSettings.geolocation.value;
-        draftTempSetting.address = this.props.storeSettings.address;
+        draftTempSetting.address = { ...this.props.storeTempSettings.address };
         delete draftTempSetting.address.text;
         draftTempSetting.radius = this.props.storeTempSettings.radius.value;
+        delete draftTempSetting.searchlocation;
 
         // Si une adresse a été paramétré alors on enregistre les données dans searchlocation (sauf si similaire )
 
         if (
-          this.props.storeTempSettings.address.value !== "" &&
+          //this.props.storeTempSettings.address.value !== "" &&
           this.props.storeSettings.searchlocation.value !==
-            this.props.storeTempSettings.address.value
+          this.props.storeTempSettings.address.value
         ) {
-          draftTempSetting.searchlocation = this.props.storeSettings.searchlocation;
+          draftTempSetting.searchlocation = {
+            ...this.props.storeTempSettings.address,
+          };
           delete draftTempSetting.searchlocation.text;
         }
       }

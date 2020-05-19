@@ -41,10 +41,10 @@ const initializeState = {
     text: "Notification",
   },
   address: {
-    value: "",
+    value: "Default",
     coord: {
-      lat: 0,
-      lon: 0,
+      lat: 47.384714655010384,
+      lon: 2.449696697294711,
     },
     text: "Adresse:",
   },
@@ -55,9 +55,11 @@ const initializeState = {
 };
 
 export default function (state = initializeState, action) {
+  let newPayload = "";
+
   switch (action.type) {
     case SET_SETTING:
-      let newPayload;
+      newPayload;
       if (action.payload.type === "value") {
         newPayload = {
           ...state[action.payload.name],
@@ -85,9 +87,13 @@ export default function (state = initializeState, action) {
       };
 
     case SET_ADDRESS:
+      newPayload =
+        action.payload === ""
+          ? Object.assign({}, initializeState.address)
+          : Object.assign({}, action.payload);
       return {
         ...state,
-        address: action.payload,
+        address: newPayload,
       };
 
     // Synchronise les settings avec les informations récupérer dans le storage
