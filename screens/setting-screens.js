@@ -76,7 +76,7 @@ class SettingScreen extends Component {
         return "Une simple et petite minuterie, rêglée sur 1h. Si vous avez autorisé les notifications, l'application vous enverra un petit rappel 15 minutes avant la fin.";
 
       case isPress.nightMode:
-        return "Permet de jongler entre le mode normal, et, le mode sombre de l'application.";
+        return "Permet de jongler entre le mode normal, et, le mode sombre de l'application.\nPour la carte, fonctionne uniquement avec Google";
 
       case isPress.address:
         return "Permet d'enregistrer votre adresse. Cela vous évitera de la retaper à chaque fois.\nEntrez votre adresse puis cliquez sur la loupe";
