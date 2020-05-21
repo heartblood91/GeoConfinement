@@ -87,6 +87,10 @@ class SettingInput extends Component {
     } else {
       // Puis les envoies au reducer le reset
       this.props.setCoord("", "ADDRESS");
+
+      // Et reset l'envoi et les erreurs s'ils en existent
+      this.state.submitLocation !== "" &&
+        this.setState({ error: "", submitLocation: false });
     }
   };
 
@@ -102,19 +106,40 @@ class SettingInput extends Component {
 
   renderStyle = () => {
     let newStyles = [];
-    if (this.props.isPress) {
-      newStyles.push(styles.selectionSetting, styles.containerBody);
-    } else {
-      newStyles.push(styles.containerBody);
-    }
 
-    if (this.props.nameInput === "address") {
-      newStyles.push(styles.containerBodyColumns);
-    } else if (this.props.nameInput === "radius") {
-      newStyles.push(styles.containerBodyRow);
-    }
+    // Ajoute un halo bleu si le bouton est pressé
+    this.props.isPress
+      ? newStyles.push(styles.selectionSetting, styles.containerBody)
+      : newStyles.push(styles.containerBody);
+
+    // Ajoute un style en fonction du type d'input
+    this.props.nameInput === "address"
+      ? newStyles.push(styles.containerBodyColumns)
+      : newStyles.push(styles.containerBodyRow);
+
+    // Gestion du dark mode
+    this.props.darkMode
+      ? newStyles.push(styles.settingBackgroundDark)
+      : newStyles.push(styles.settingBackgroundNormal);
 
     return newStyles;
+  };
+
+  // Génère le style du texte en fonction
+  // Erreur ou non
+  // Dark ou non
+  renderErrorStyle = () => {
+    if (this.state.error === "") {
+      if (this.props.darkMode) {
+        return styles.inputNoErrorDark;
+      } else {
+        return styles.inputNoErrorNormal;
+      }
+    } else if (this.props.darkMode) {
+      return styles.inputErrorDark;
+    } else {
+      return styles.inputErrorNormal;
+    }
   };
 
   // Render radius
@@ -124,7 +149,10 @@ class SettingInput extends Component {
         <Input
           inputContainerStyle={{ height: hp("3%") }}
           containerStyle={styles.inputPositionRow}
-          placeholderTextColor={APP_COLORS.grayColor}
+          inputStyle={this.props.darkMode ? styles.textBodyDark : {}}
+          placeholderTextColor={
+            this.props.darkMode ? APP_COLORS.textDarkMode : APP_COLORS.grayColor
+          }
           maxLength={4}
           placeholder={"Distance"}
           onChangeText={(inputValue) =>
@@ -142,7 +170,14 @@ class SettingInput extends Component {
           keyboardType={"number-pad"}
         />
         <View style={styles.containerInputSwitchScale}>
-          <Text style={styles.textBody}>m</Text>
+          <Text
+            style={[
+              styles.textBody,
+              this.props.darkMode ? styles.textBodyDark : styles.textBodyNormal,
+            ]}
+          >
+            m
+          </Text>
           <Switch
             trackColor={{
               false: APP_COLORS.graySwitch,
@@ -150,8 +185,8 @@ class SettingInput extends Component {
             }}
             ios_backgroundColor={APP_COLORS.graySwitch}
             thumbColor={
-              this.state.scaleRaddius
-                ? APP_COLORS.blueColor
+              this.props.darkMode
+                ? APP_COLORS.blueDarkColor
                 : APP_COLORS.blueColor
             }
             onChange={() =>
@@ -159,7 +194,14 @@ class SettingInput extends Component {
             }
             value={this.state.scaleRaddius}
           />
-          <Text style={styles.textBody}>km</Text>
+          <Text
+            style={[
+              styles.textBody,
+              this.props.darkMode ? styles.textBodyDark : styles.textBodyNormal,
+            ]}
+          >
+            km
+          </Text>
         </View>
       </View>
     );
@@ -170,7 +212,10 @@ class SettingInput extends Component {
     return (
       <Input
         inputContainerStyle={styles.inputPositionColumns}
-        placeholderTextColor={APP_COLORS.grayColor}
+        placeholderTextColor={
+          this.props.darkMode ? APP_COLORS.textDarkMode : APP_COLORS.grayColor
+        }
+        inputStyle={this.props.darkMode ? styles.textBodyDark : {}}
         placeholder={"Entrez votre adresse ici"}
         onChangeText={(inputValue) => this.setState({ inputValue })}
         onSubmitEditing={this.submitSearch}
@@ -179,16 +224,18 @@ class SettingInput extends Component {
         dataDetectorTypes={"address"}
         textContentType={"addressCity"}
         errorMessage={this.renderError()}
-        errorStyle={
-          this.state.error === "" ? styles.inputNoError : styles.inputError
-        }
+        errorStyle={this.renderErrorStyle()}
         keyboardType={"default"}
         rightIcon={
           <Icon
             type="material-community"
             name="map-search"
             size={Math.round(wp("10%"))}
-            color={APP_COLORS.blackColor}
+            color={
+              this.props.darkMode
+                ? APP_COLORS.grayLightColor
+                : APP_COLORS.blackColor
+            }
             onPress={this.submitSearch}
           />
         }
@@ -202,8 +249,20 @@ class SettingInput extends Component {
         <Text
           style={
             this.props.nameInput === "address"
-              ? [styles.textBody, styles.textBodyColumns]
-              : [styles.textBody, styles.textBodyRows]
+              ? [
+                  styles.textBody,
+                  this.props.darkMode
+                    ? styles.textBodyDark
+                    : styles.textBodyNormal,
+                  styles.textBodyColumns,
+                ]
+              : [
+                  styles.textBody,
+                  this.props.darkMode
+                    ? styles.textBodyDark
+                    : styles.textBodyNormal,
+                  styles.textBodyRows,
+                ]
           }
           onPress={() =>
             this.props.handleChangeSettings(this.props.nameInput, "isPress")
@@ -271,8 +330,6 @@ const styles = StyleSheet.create({
 
     // Shadow
     borderRadius: 20,
-    backgroundColor: "#fff",
-
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -290,18 +347,47 @@ const styles = StyleSheet.create({
 
   textBody: {
     fontSize: Math.round(wp("5%")),
-    color: APP_COLORS.blackColor,
   },
 
   inputNoError: {
     fontSize: Math.round(wp("4%")),
     fontWeight: "700",
-    color: APP_COLORS.greenColor,
   },
   inputError: {
     fontSize: Math.round(wp("4%")),
     fontWeight: "700",
+  },
+
+  // Couleur mode normal:
+  settingBackgroundNormal: {
+    backgroundColor: "#fff",
+  },
+
+  textBodyNormal: {
+    color: APP_COLORS.blackColor,
+  },
+  inputNoErrorNormal: {
+    color: APP_COLORS.greenColor,
+  },
+
+  inputErrorNormal: {
     color: APP_COLORS.redColor,
+  },
+
+  // Couleur mode nuit:
+  textBodyDark: {
+    color: APP_COLORS.textDarkMode,
+  },
+  inputNoErrorDark: {
+    color: "#32CD32",
+  },
+
+  inputErrorDark: {
+    color: "#EB9532",
+  },
+
+  settingBackgroundDark: {
+    backgroundColor: APP_COLORS.settingBackground,
   },
 });
 
@@ -310,6 +396,7 @@ const mapStateToProps = (store, ownProps) => {
   return {
     input: store.tempSetting[ownProps.nameInput],
     isPress: store.tempSetting.isPress[ownProps.nameInput],
+    darkMode: store.tempSetting.nightMode.value,
   };
 };
 

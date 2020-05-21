@@ -14,6 +14,7 @@ import { setCoord, initSettingWithStorage } from "../actions";
 import ShowTimer from "../components/timer";
 import { APP_COLORS } from "../styles/color";
 import { suscribeToPushNotifications } from "../services/notifications";
+import { nightModeForGoogle } from "../services/night-mode-google";
 
 // Coordonnées par défaut du centre de Paris
 const DEFAULT_COORD = {
@@ -352,6 +353,9 @@ class MapScreen extends Component {
         <MapView
           ref={(mapView) => (this._mapView = mapView)}
           style={{ flex: 1 }}
+          customMapStyle={
+            this.props.storeSettings.nightMode ? nightModeForGoogle : []
+          }
           showsUserLocation={this.props.storeSettings.geolocation}
           userLocationAnnotationTitle={"Moi"}
           userLocationUpdateInterval={30000}

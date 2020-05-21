@@ -16,4 +16,12 @@ export const APP_COLORS = {
   blueCircle: "rgba(204,238,255,0.3)",
   redCircle: "rgba(255,230,230,0.4)",
   greenCircle: "rgba(204,255,220,0.3)",
+
+  // Dark mode
+  GeneralBackgroundDarkMode: "#343a40",
+  settingBackground: "#505962",
+  textDarkMode: "#D2D7D3",
+  greenDarkColor: "#32CD32",
+  redDarkColor: "#EB9532",
+  blueDarkColor: "#4da3ff",
 };

@@ -156,13 +156,27 @@ class SettingScreen extends Component {
   render() {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{ flex: 1 }}>
+        <View
+          style={{
+            flex: 1,
+            ...(this.props.storeTempSettings.nightMode.value &&
+              styles.generalBackgroundBlack),
+          }}
+        >
           <View style={styles.containerReturn}>
             <Icon
               name="arrow-back"
               type="SimpleLineIcons"
-              color={APP_COLORS.blueLightcolor}
-              reverseColor="#fff"
+              color={
+                this.props.storeTempSettings.nightMode.value
+                  ? APP_COLORS.grayLightColor
+                  : APP_COLORS.blueLightcolor
+              }
+              reverseColor={
+                this.props.storeTempSettings.nightMode.value
+                  ? APP_COLORS.GeneralBackgroundDarkMode
+                  : "#fff"
+              }
               reverse
               size={Math.round(wp("5%"))}
               onPress={() => this.props.navigation.navigate("Home")}
@@ -170,14 +184,26 @@ class SettingScreen extends Component {
 
             <Text
               onPress={() => this.props.navigation.navigate("Home")}
-              style={styles.textReturn}
+              style={[
+                styles.textReturn,
+                this.props.storeTempSettings.nightMode.value
+                  ? styles.textDark
+                  : styles.textReturnNormal,
+              ]}
             >
               Retour à la carte
             </Text>
           </View>
           {!this.state.isKeyboard && (
             <View style={styles.descriptionContainer}>
-              <Text style={styles.textDescription}>
+              <Text
+                style={[
+                  styles.textDescription,
+                  this.props.storeTempSettings.nightMode.value
+                    ? styles.textDark
+                    : styles.textDescriptionNormal,
+                ]}
+              >
                 {this.renderTextDescription()}
               </Text>
             </View>
@@ -205,6 +231,7 @@ class SettingScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  //Normal Mode
   containerReturn: {
     flexDirection: "row",
     justifyContent: "flex-start",
@@ -225,12 +252,27 @@ const styles = StyleSheet.create({
   },
   textDescription: {
     fontSize: Math.round(wp("5%")),
-    color: APP_COLORS.blackColor,
     textAlign: "justify",
   },
   textReturn: {
     fontSize: Math.round(wp("7%")),
+  },
+
+  // Couleur mode normal:
+  textDescriptionNormal: {
+    color: APP_COLORS.blackColor,
+  },
+  textReturnNormal: {
     color: APP_COLORS.blueColor,
+  },
+
+  // Couleur mode nuit:
+  generalBackgroundBlack: {
+    backgroundColor: APP_COLORS.GeneralBackgroundDarkMode,
+  },
+
+  textDark: {
+    color: APP_COLORS.textDarkMode,
   },
 });
 

@@ -51,10 +51,10 @@ class SettingSwitch extends Component {
   };
 
   renderStyle = () => {
-    const style = [styles.containerBody];
+    const newStyles = [styles.containerBody];
 
     // Si le bouton est pressée alors on ajoute un style supplémentaire
-    this.props.isPress && style.push(styles.selectionSetting);
+    this.props.isPress && newStyles.push(styles.selectionSetting);
 
     // Verifie si 'visualWarning' est désactivé
     const visualWarningIsDisabled =
@@ -64,16 +64,37 @@ class SettingSwitch extends Component {
         : false;
 
     // Si le bouton est désactivée alors on ajoute un style supplémentaire
-    visualWarningIsDisabled && style.push(styles.disableInput);
+    // Sinon, on ajoute le background selon le dark mode
+    if (
+      visualWarningIsDisabled &&
+      this.props.storeTempSetting.nightMode.value
+    ) {
+      newStyles.push(styles.disableInputDark);
+    } else if (
+      visualWarningIsDisabled &&
+      !this.props.storeTempSetting.nightMode.value
+    ) {
+      newStyles.push(styles.disableInputNormal);
+    } else {
+      // Gestion du dark mode
+      this.props.storeTempSetting.nightMode.value
+        ? newStyles.push(styles.settingBackgroundDark)
+        : newStyles.push(styles.settingBackgroundNormal);
+    }
 
-    return style;
+    return newStyles;
   };
 
   render() {
     return (
       <View style={this.renderStyle()}>
         <Text
-          style={styles.textBody}
+          style={[
+            styles.textBody,
+            this.props.storeTempSetting.nightMode.value
+              ? styles.textBodyDark
+              : styles.textBodyNormal,
+          ]}
           onPress={() =>
             this.props.handleChangeSettings(this.props.nameSwitch, "isPress")
           }
@@ -121,7 +142,6 @@ const styles = StyleSheet.create({
 
     // Shadow
     borderRadius: 20,
-    backgroundColor: "#fff",
 
     shadowColor: "#000",
     shadowOffset: {
@@ -140,15 +160,32 @@ const styles = StyleSheet.create({
 
   textBody: {
     fontSize: Math.round(wp("5%")),
-    color: APP_COLORS.blackColor,
     width: wp("72%"),
   },
   switchPosition: {
     transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
   },
 
-  disableInput: {
+  // Couleur mode normal:
+  settingBackgroundNormal: {
+    backgroundColor: "#fff",
+  },
+  textBodyNormal: {
+    color: APP_COLORS.blackColor,
+  },
+  disableInputNormal: {
     backgroundColor: APP_COLORS.grayLightColor,
+  },
+
+  // Couleur mode nuit:
+  settingBackgroundDark: {
+    backgroundColor: APP_COLORS.settingBackground,
+  },
+  textBodyDark: {
+    color: APP_COLORS.textDarkMode,
+  },
+  disableInputDark: {
+    backgroundColor: APP_COLORS.GeneralBackgroundDarkMode,
   },
 });
 
