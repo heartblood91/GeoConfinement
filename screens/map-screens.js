@@ -376,8 +376,12 @@ class MapScreen extends Component {
           raised
           name="my-location"
           type="material"
-          color="#fff"
-          reverseColor={APP_COLORS.blueColor}
+          color={
+            this.props.storeSettings.nightMode ? APP_COLORS.grayColor : "#fff"
+          }
+          reverseColor={
+            this.props.storeSettings.nightMode ? "#fff" : APP_COLORS.blueColor
+          }
           reverse
           size={Math.round(wp("5%"))}
           containerStyle={{
@@ -405,7 +409,7 @@ class MapScreen extends Component {
           onPress={() => this.props.navigation.navigate("Settings")}
         />
         <SearchBar
-          lightTheme
+          lightTheme={this.props.storeSettings.nightMode ? false : true}
           round
           onChangeText={this.updateSearch}
           value={this.state.search}
@@ -415,8 +419,16 @@ class MapScreen extends Component {
           errorStyle={
             this.state.error === "" ? styles.inputNoError : styles.inputError
           }
-          placeholderTextColor={APP_COLORS.blackColor}
-          inputStyle={{ color: APP_COLORS.blackColor }}
+          placeholderTextColor={
+            this.props.storeSettings.nightMode
+              ? APP_COLORS.textDarkMode
+              : APP_COLORS.blackColor
+          }
+          inputStyle={{
+            color: this.props.storeSettings.nightMode
+              ? APP_COLORS.textDarkMode
+              : APP_COLORS.blackColor,
+          }}
           containerStyle={{
             position: "absolute",
             top: hp("1%"),
@@ -425,7 +437,9 @@ class MapScreen extends Component {
 
             // Shadow
             borderRadius: 20,
-            backgroundColor: "#fff",
+            backgroundColor: this.props.storeSettings.nightMode
+              ? APP_COLORS.settingBackground
+              : "#fff",
 
             shadowColor: "#000",
             shadowOffset: {
