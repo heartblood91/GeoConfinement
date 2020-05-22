@@ -91,7 +91,14 @@ class ShowTimer extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          this.props.storeSettings.nightMode
+            ? styles.containerDark
+            : styles.containerNormal,
+        ]}
+      >
         <Icon
           raised
           name={this.state.timerIsOn ? "pause" : "play"}
@@ -105,8 +112,18 @@ class ShowTimer extends Component {
         <Text
           style={
             this.state.minutes <= 15 && this.state.hours === 0
-              ? [styles.textTimer, styles.timeIsLessThanQuarter]
-              : styles.textTimer
+              ? [
+                  styles.textTimer,
+                  this.props.storeSettings.nightMode
+                    ? styles.timeIsLessThanQuarterDark
+                    : styles.timeIsLessThanQuarterNormal,
+                ]
+              : [
+                  styles.textTimer,
+                  this.props.storeSettings.nightMode
+                    ? styles.textTimerDark
+                    : styles.textTimerNormal,
+                ]
           }
         >
           {this.state.hours < 10 ? `0${this.state.hours}` : this.state.hours}:
@@ -135,22 +152,43 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#eee",
 
     //Border
     borderTopWidth: 1,
-    borderTopColor: APP_COLORS.blackColor,
   },
 
   textTimer: {
-    color: APP_COLORS.grayColor,
     fontSize: Math.round(wp("15%")),
     textAlign: "justify",
     fontWeight: "700",
   },
 
-  timeIsLessThanQuarter: {
+  //Mode normal
+  containerNormal: {
+    backgroundColor: "#eee",
+
+    //Border
+    borderTopColor: APP_COLORS.blackColor,
+  },
+  textTimerNormal: {
+    color: APP_COLORS.grayColor,
+  },
+  timeIsLessThanQuarterNormal: {
     color: APP_COLORS.redColor,
+  },
+
+  // Mode nuit
+  containerDark: {
+    backgroundColor: APP_COLORS.GeneralBackgroundDarkMode,
+
+    //Border
+    borderTopColor: APP_COLORS.grayColor,
+  },
+  textTimerDark: {
+    color: APP_COLORS.textDarkMode,
+  },
+  timeIsLessThanQuarterDark: {
+    color: APP_COLORS.redDarkColor,
   },
 });
 
