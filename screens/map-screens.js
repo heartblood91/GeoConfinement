@@ -14,15 +14,8 @@ import { setCoord, initSettingWithStorage } from "../actions";
 import ShowTimer from "../components/timer";
 import { APP_COLORS } from "../styles/color";
 import { suscribeToPushNotifications } from "../services/notifications";
-import { nightModeForGoogle } from "../services/night-mode-google";
-
-// Coordonnées par défaut du centre de Paris
-const DEFAULT_COORD = {
-  latitude: 47.384714655010384,
-  longitude: 2.449696697294711,
-  latitudeDelta: 19.411919009812614,
-  longitudeDelta: 15.498672053217886,
-};
+import { nightModeForGoogle } from "../staticVariables/night-mode-google";
+import { DEFAULT_COORD } from "../staticVariables/default-coord";
 
 class MapScreen extends Component {
   state = {

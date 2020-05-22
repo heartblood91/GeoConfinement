@@ -1,13 +1,10 @@
 import { SET_LOCATION, SYNCHRO_SETTING } from "../actions/action-types";
+import { DEFAULT_ADDRESS } from "../staticVariables/default-coord";
 
 // initialise le store
 const initializeState = {
   searchlocation: {
-    value: "Default",
-    coord: {
-      lat: 47.384714655010384,
-      lon: 2.449696697294711,
-    },
+    ...DEFAULT_ADDRESS,
   },
   geolocation: false,
   notification: false,
@@ -15,11 +12,7 @@ const initializeState = {
   timer: false,
   nightMode: false,
   address: {
-    value: "Default",
-    coord: {
-      lat: 47.384714655010384,
-      lon: 2.449696697294711,
-    },
+    ...DEFAULT_ADDRESS,
   },
   radius: 100000,
 };

@@ -4,6 +4,7 @@ import {
   SET_ADDRESS,
   SYNCHRO_SETTING_INIT,
 } from "../actions/action-types";
+import { DEFAULT_ADDRESS } from "../staticVariables/default-coord";
 
 //Initiale Store of isPress
 const initialStateIsPress = {
@@ -34,18 +35,14 @@ const initializeState = {
   },
   nightMode: {
     value: false,
-    text: "Mode nuit",
+    text: "Mode sombre",
   },
   notification: {
     value: false,
     text: "Notification",
   },
   address: {
-    value: "Default",
-    coord: {
-      lat: 47.384714655010384,
-      lon: 2.449696697294711,
-    },
+    ...DEFAULT_ADDRESS,
     text: "Adresse:",
   },
   radius: {
