@@ -3,14 +3,32 @@
   "displayName": "GeoConfinement",
   "expo": {
     "name": "GeoConfinement",
+    "icon": "./android/app/src/main/res/drawable/icon.png",
     "slug": "GeoConfinement",
+    "platforms": ["android"],
+    "orientation": "portrait",
+    "notification": {
+      "icon": "./android/app/src/main/res/drawable/icon.png",
+      "color": "#fff"
+    },
     "version": "1.0.0",
-    "platforms": ["ios", "android", "web"],
-    "assetBundlePatterns": ["**/*"],
     "android": {
-      "package": "com.hidemyhome.geoconfinement",
-      "versionCode": 1,
-      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
-    }
+      "package": "***REMOVED***",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE"
+      ],
+      "googleServicesFile": "./credentials/google-services.json",
+      "config": {
+        "googleMaps": {
+          "apiKey": "***REMOVED***"
+        }
+      },
+      "versionCode": 2
+    },
+
+    "description": "Application pour le confinement. Elle permet de visualiser une zone de déplacement. Quelques options sont disponibles, comme la géolocalisation, les notifications, la taille du périmètre, un mode sombre, un compte à rebours"
   }
 }

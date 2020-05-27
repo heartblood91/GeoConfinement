@@ -10,6 +10,7 @@ import {
 import LocationIQ from "react-native-locationiq";
 import { setCoord } from "../actions";
 import { APP_COLORS } from "../styles/color";
+import { LOCATION_IQ_API } from "../credentials/credentials";
 
 class SettingInput extends Component {
   state = {
@@ -61,7 +62,7 @@ class SettingInput extends Component {
   submitSearch = () => {
     if (this.state.inputValue !== "") {
       // Init le module avec l'API Key:
-      LocationIQ.init("***REMOVED***"); // masquer l'API KEY sur Github
+      LocationIQ.init(LOCATION_IQ_API);
 
       // Puis effectue la recherche
       LocationIQ.search(this.state.inputValue)

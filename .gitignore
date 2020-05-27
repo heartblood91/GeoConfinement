@@ -60,3 +60,8 @@ buck-out/
 
 # Expo
 .expo/*
+
+#Files with API
+/credentials/*
+/android/app/src/main/AndroidManifest.xml
+/app.json

@@ -16,6 +16,7 @@ import { APP_COLORS } from "../styles/color";
 import { suscribeToPushNotifications } from "../services/notifications";
 import { nightModeForGoogle } from "../staticVariables/night-mode-google";
 import { DEFAULT_COORD } from "../staticVariables/default-coord";
+import { LOCATION_IQ_API } from "../credentials/credentials";
 
 class MapScreen extends Component {
   state = {
@@ -38,7 +39,6 @@ class MapScreen extends Component {
         search: this.props.storeSettings.searchlocation.value,
       });
     }
-
     // Récupération des settings de l'utilisateur dans le storage
     this.getSettings();
   };
@@ -113,7 +113,7 @@ class MapScreen extends Component {
   submitSearch = () => {
     if (this.state.search !== "") {
       // Init le module avec l'API Key:
-      LocationIQ.init("***REMOVED***"); // masquer l'API KEY sur Github
+      LocationIQ.init(LOCATION_IQ_API);
 
       // Puis effectue la recherche
       LocationIQ.search(this.state.search)

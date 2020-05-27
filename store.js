@@ -5,7 +5,7 @@ import reducers from "./reducers";
 const invariant = require("redux-immutable-state-invariant").default();
 
 const composedEnhancer =
-  process.env.NODE_ENV !== "production"
+  process.env.NODE_ENV === "development"
     ? composeWithDevTools(applyMiddleware(thunk, invariant))
     : composeWithDevTools(applyMiddleware(thunk));
 
