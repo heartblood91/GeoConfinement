@@ -1,3 +1,5 @@
+// Gère les couleurs de l'appli
+
 export const APP_COLORS = {
   greenColor: "#28a745",
   redColor: "#dc3545",

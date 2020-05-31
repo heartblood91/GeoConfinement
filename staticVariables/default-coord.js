@@ -1,3 +1,4 @@
+// Adresse par defaut (France centré)
 export const DEFAULT_ADDRESS = {
   value: "Default",
   coord: {
@@ -6,6 +7,7 @@ export const DEFAULT_ADDRESS = {
   },
 };
 
+// Coordonnée par defaut (France centré)
 export const DEFAULT_COORD = {
   latitude: 47.384714655010384,
   longitude: 2.449696697294711,

@@ -4,10 +4,11 @@ import thunk from "redux-thunk";
 import reducers from "./reducers";
 const invariant = require("redux-immutable-state-invariant").default();
 
+// Enlève la vérification des mutations de state dans le cadre d'une application en développement
 const composedEnhancer =
   process.env.NODE_ENV === "development"
     ? composeWithDevTools(applyMiddleware(thunk, invariant))
-    : composeWithDevTools(applyMiddleware(thunk));
+    : applyMiddleware(thunk);
 
 const store = createStore(reducers, {}, composedEnhancer);
 

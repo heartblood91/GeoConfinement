@@ -1,5 +1,7 @@
+<!-- Remplacer XXXX par vos informations. Puis enregistrez ce fichier dans le répertoire: ./android/app/src/main en le renommant sans le "-sample" -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="***REMOVED***">
+    package="XXXX">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -35,7 +37,7 @@
 
       <!-- Clé d'API pour utiliser Google Maps sur notre APK -->
       <application>   
-        <meta-data android:name="***REMOVED***" android:value="***REMOVED***"/>
+        <meta-data android:name="XXXX" android:value="XXXX"/>
       </application>
       <!-- <meta-data android:name="expo.modules.updates.EXPO_UPDATE_URL" android:value="YOUR-APP-URL-HERE" />
       <meta-data android:name="expo.modules.updates.EXPO_SDK_VERSION" android:value="YOUR-APP-SDK-VERSION-HERE" />      -->

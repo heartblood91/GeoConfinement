@@ -1,3 +1,5 @@
+// Permet de mettre la carte google en mode nuit
+
 export const nightModeForGoogle = [
   {
     elementType: "geometry",

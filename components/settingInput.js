@@ -95,6 +95,7 @@ class SettingInput extends Component {
     }
   };
 
+  // Génère les erreurs lors de la saisie de l'adresse
   renderError = () => {
     if (this.state.error === "" && this.state.submitLocation) {
       return "Parfait, merci, j'ai enregistré votre adresse";
@@ -105,6 +106,7 @@ class SettingInput extends Component {
     }
   };
 
+  // Génère le style de l'input
   renderStyle = () => {
     let newStyles = [];
 
@@ -143,7 +145,7 @@ class SettingInput extends Component {
     }
   };
 
-  // Render radius
+  // Render de l'input radius
   renderInputRow = () => {
     return (
       <View style={styles.containerInputRadius}>
@@ -244,6 +246,7 @@ class SettingInput extends Component {
     );
   };
 
+  // Fais un rendu global de l'input (soit il s'agit de l'input adresse soit il s'agit de l'input rayon)
   render() {
     return (
       <View style={this.renderStyle()}>

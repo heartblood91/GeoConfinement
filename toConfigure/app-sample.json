@@ -1,4 +1,6 @@
 {
+  "_comment": "Supprimer ce commentaire, remplacer XXXXX par vos valeurs et placer ce fichier à la racine (à la place de app.json)",
+
   "name": "GeoConfinement",
   "displayName": "GeoConfinement",
   "expo": {
@@ -14,7 +16,7 @@
     },
     "version": "1.0.0",
     "android": {
-      "package": "***REMOVED***",
+      "package": "XXXXX",
       "permissions": [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION",
@@ -24,7 +26,7 @@
       "googleServicesFile": "./credentials/google-services.json",
       "config": {
         "googleMaps": {
-          "apiKey": "***REMOVED***"
+          "apiKey": "XXXXX"
         }
       },
       "versionCode": 2

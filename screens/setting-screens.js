@@ -59,6 +59,7 @@ class SettingScreen extends Component {
     this.setState({ isKeyboard: isShow });
   };
 
+  // Génère le texte de description lorsqu'input est préssé par l'utilisateur
   renderTextDescription = () => {
     const isPress = Object.assign({}, this.props.storeTempSettings.isPress);
 

@@ -9,6 +9,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 const Stack = createStackNavigator();
 
+// Génère l'application avec un système de navigation entre les paramètres et l'écran principal
+// Ajoute la barre haute pour que l'utilisateur conserve ces informations (heures, batterie, réseau ...)
+// Récupère le store de redux pour diffusion
+
 export default class App extends Component {
   render() {
     return (

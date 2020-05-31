@@ -8,6 +8,7 @@ import {
   SYNCHRO_SETTING_INIT,
 } from "./action-types";
 
+// Stock les coordonnées de la search bar ou de l'adresse (paramètre) dans les reducers
 export const setCoord = (geocode, actionTypeBrute) => {
   return function (dispatch) {
     const actionType =
@@ -17,6 +18,7 @@ export const setCoord = (geocode, actionTypeBrute) => {
   };
 };
 
+// Traite la modification des paramètres dans le reducer
 export const handleChangeSettings = (name, type, inputValue) => {
   const actionType = type === "isPress" ? SET_IS_PRESS : SET_SETTING;
 
@@ -25,12 +27,14 @@ export const handleChangeSettings = (name, type, inputValue) => {
   };
 };
 
+// Synchronise les 2 reducers (Temporaire et Principal)
 export const syncroTempToSettings = (tempSetting) => {
   return function (dispatch) {
     dispatch({ type: SYNCHRO_SETTING, payload: { ...tempSetting } });
   };
 };
 
+// Initialise les reducers selon les valeurs inscrites dans le storage
 export const initSettingWithStorage = (storageSetting, reducerTempSetting) => {
   // Créé un nouveau storageSetting adapté au tempSetting
   const newStorageSetting = produce(

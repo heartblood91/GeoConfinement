@@ -1,3 +1,5 @@
+// Stock l'ensemble des actions type pour redux
+
 export const SET_LOCATION = "SET_LOCATION";
 export const SET_SETTING = "SET_SETTING";
 export const SET_ADDRESS = "SET_ADDRESS";
