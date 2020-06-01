@@ -6,17 +6,17 @@
   "expo": {
     "githubUrl": "https://github.com/heartblood91/GeoConfinement",
     "name": "GeoConfinement",
-    "icon": "./android/app/src/main/res/drawable/icon.png",
+    "icon": "./assets/icon.png",
     "slug": "GeoConfinement",
     "platforms": ["android"],
     "orientation": "portrait",
     "notification": {
-      "icon": "./android/app/src/main/res/drawable/icon.png",
+      "icon": "./assets/icon.png",
       "color": "#fff"
     },
-    "version": "1.0.0",
+    "version": "1.1.0",
     "android": {
-      "package": "XXXXX",
+      "package": "XXXX",
       "permissions": [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION",
@@ -26,10 +26,20 @@
       "googleServicesFile": "./credentials/google-services.json",
       "config": {
         "googleMaps": {
-          "apiKey": "XXXXX"
+          "apiKey": "XXXX"
         }
       },
-      "versionCode": 2
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=***REMOVED***",
+      "splash": {
+        "mdpi": "./assets/splash.png",
+        "hdpi": "./assets/splash.png",
+        "xhdpi": "./assets/splash.png",
+        "xxhdpi": "./assets/splash.png",
+        "xxxhdpi": "./assets/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#343a40"
+      },
+      "versionCode": 3
     },
 
     "description": "Application pour le confinement. Elle permet de visualiser une zone de déplacement. Quelques options sont disponibles, comme la géolocalisation, les notifications, la taille du périmètre, un mode sombre, un compte à rebours"

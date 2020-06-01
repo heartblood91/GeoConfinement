@@ -9,6 +9,7 @@ import {
 } from "react-native-responsive-screen";
 import { connect } from "react-redux";
 import { getDistance } from "geolib";
+import * as SplashScreen from "expo-splash-screen";
 
 import { setCoord, initSettingWithStorage } from "../actions";
 import ShowTimer from "../components/timer";
@@ -41,6 +42,13 @@ class MapScreen extends Component {
     }
     // Récupération des settings de l'utilisateur dans le storage
     this.getSettings();
+
+    // Enleve le splash screen dès que le composant est monté + 1s (pour que la map est le temps de render selon les paramètres de l'appli
+    // + refocus car la map est bien centré mais le zoom est mauvais)
+    setTimeout(() => {
+      this.refocus();
+      SplashScreen.hideAsync();
+    }, 1000);
   };
 
   componentDidUpdate = (prevProps) => {

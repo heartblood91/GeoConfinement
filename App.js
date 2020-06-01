@@ -6,6 +6,7 @@ import store from "./store";
 import { Provider } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import * as SplashScreen from "expo-splash-screen";
 
 const Stack = createStackNavigator();
 
@@ -14,6 +15,11 @@ const Stack = createStackNavigator();
 // Récupère le store de redux pour diffusion
 
 export default class App extends Component {
+  // Ajoute un splash screen avec le logo de l'appli tant que map screen n'est pas chargé
+  componentDidMount = () => {
+    SplashScreen.preventAutoHideAsync();
+  };
+
   render() {
     return (
       <Provider store={store}>
