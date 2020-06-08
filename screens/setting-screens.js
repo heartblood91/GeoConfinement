@@ -106,10 +106,9 @@ class SettingScreen extends Component {
         draftTempSetting.radius = this.props.storeTempSettings.radius.value;
         delete draftTempSetting.searchlocation;
 
-        // MAJ de searchlocation dans 6 cas
+        // MAJ de searchlocation dans 5 cas
         // oldSearchLocation    newSearchLocation   Resultats
         // default	            addresse	          addresse
-        // addresse	            default	            default
         // location	            addresse	          addresse
         // addresse	            location	          location
         // default	            location	          location
@@ -127,7 +126,8 @@ class SettingScreen extends Component {
         } else if (
           oldSearchLocation !== "Géolocalisation" &&
           oldSearchLocation !== "Default" &&
-          oldSearchLocation !== newSearchLocation
+          oldSearchLocation !== newSearchLocation &&
+          newSearchLocation !== "Default"
         ) {
           testMaj = true;
         } else if (
