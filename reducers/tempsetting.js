@@ -46,7 +46,7 @@ const initializeState = {
     text: "Adresse:",
   },
   radius: {
-    value: 100000,
+    value: 10000,
     text: "Rayon:",
   },
 };

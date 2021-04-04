@@ -218,7 +218,7 @@ class SettingScreen extends Component {
                   <SettingSwitch nameSwitch={"visualWarning"} />
                   <SettingSwitch nameSwitch={"geolocation"} />
                   <SettingSwitch nameSwitch={"nightMode"} />
-                  <SettingSwitch nameSwitch={"notification"} />
+                  {/* <SettingSwitch nameSwitch={"notification"} /> */}
                 </Fragment>
               )}
 
