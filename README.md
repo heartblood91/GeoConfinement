@@ -27,7 +27,7 @@ A l'ouverture de l'app, vous avez accès à une carte centrée sur la France (to
 - Soit vous tapez votre adresse dans la barre de recherche
 - Soit vous activez la géolocalisation
 
-Un cercle bleu apparaît avec rayon de 100kms :bird:. La distance est à vol d'oiseau bien entendu! J'ai dit oiseau, pas pigeon parisien... Pas le droit d'aller plus loin sans motif valable jusqu'au 02/06/2020 ... :oncoming_police_car: :ambulance:
+Un cercle bleu apparaît avec rayon de 10kms :bird:. La distance est à vol d'oiseau bien entendu! J'ai dit oiseau, pas pigeon parisien...
 
 <ins>En cliquant sur la roue crantée, vous avez accès aux options: </ins>
 
@@ -37,7 +37,7 @@ Un cercle bleu apparaît avec rayon de 100kms :bird:. La distance est à vol d'o
 - <em> Couleur zone dynamique </em>, en vert si vous êtes dans le cercle, en rouge si vous êtes en dehors. Par défaut c'est un petit cercle bleu tout mignon. Nécessite la géolocalisation pour fonctionner si non --> désactivé
 - <em>Géolocalisation: </em> Permet de savoir précisément votre position pour tracer le cercle ou de vous situer par rapport à celui-ci.
 - <em> Mode sombre: </em> Passe l'application et la map dans un mode nuit / mode sombre. Pour protéger vos yeux des lumières bleues :sunglasses:
-- <em> Notification: </em> Selon les options activées, vous pouvez recevoir une alerte si vous sortez du périmètre ou si vous votre longue balade arrive à sa fin. (Une notification 15 minutes avant la fin et une autre à la toute fin :cry:)
+-   ~~<em> Notification: </em> Selon les options activées, vous pouvez recevoir une alerte si vous sortez du périmètre ou si vous votre longue balade arrive à sa fin. (Une notification 15 minutes avant la fin et une autre à la toute fin :cry:)~~ cette fonctionnalité a été mis en commentaire.
 - <em> Rayon: </em> **Vous pouvez changer la taille du périmètre**. La taille peut varier entre 1m et 1000 kms, cela vous laisse une bonne marge!
 
 ## Screenshots
