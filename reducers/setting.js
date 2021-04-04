@@ -14,7 +14,7 @@ const initializeState = {
   address: {
     ...DEFAULT_ADDRESS,
   },
-  radius: 100000,
+  radius: 10000,
 };
 
 export default function (state = initializeState, action) {
