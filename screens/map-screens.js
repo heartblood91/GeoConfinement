@@ -452,7 +452,9 @@ class MapScreen extends Component {
             elevation: 8,
           }}
           style={{
-            color: APP_COLORS.blackColor,
+            color: this.props.storeSettings.nightMode
+              ? APP_COLORS.textDarkMode
+              : APP_COLORS.blackColor,
           }}
         />
         {this.props.storeSettings.timer && (
